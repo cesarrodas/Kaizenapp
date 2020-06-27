@@ -8,3 +8,10 @@ export async function connectDB() {
   return mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
 }
 
+export async function setConnect(cb){
+  let result = connectDB();
+  result.catch((err) => { console.log("Error: ", err) });
+  result.then(() => {
+    cb();
+  });
+};

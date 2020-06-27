@@ -4,6 +4,7 @@ const processSchema = new mongoose.Schema({
   name: String,
   category: String,
   pages: [],
+  tags: [],
   creator: String
 },
 {
