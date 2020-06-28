@@ -38,9 +38,9 @@ import User from '../models/userModel';
 
   });
 
-  app.put('/api/users/update', (req, res) => {
+  app.put('/api/users/:id', (req, res) => {
     let newUser = {};
-    const id = req.body._id;
+    const id = req.params.id;
 
     if(req.body.username){
       newUser.username = req.body.username;
