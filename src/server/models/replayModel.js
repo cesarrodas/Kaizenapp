@@ -4,7 +4,8 @@ const replaySchema = new mongoose.Schema({
   name: String,
   detail: String,
   process: String,
-  creator: String
+  creator: String,
+  tags: []
 },
 {
   timestamps: true

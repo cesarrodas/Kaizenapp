@@ -2,7 +2,11 @@ import { setConnect } from '../connect-db';
 //import mongoose from 'mongoose';
 import User from '../models/userModel'; 
 
- export const userRoutes = (app) => {
+import bcrypt from 'bcrypt';
+
+const saltRounds = 12;
+
+export const userRoutes = (app) => {
 
   app.get('/api/users/:id', (req, res) => {
     const id = req.params.id;
@@ -13,7 +17,7 @@ import User from '../models/userModel';
           res.status(404);
           res.send({ message: "User not found." });
         }
-  
+
         res.status(200);
         res.send(user);
       });
@@ -23,18 +27,23 @@ import User from '../models/userModel';
   app.post('/api/users/create', async function(req, res){
 
     const { username, email, password } = req.body;
+    try {
 
-    setConnect(() => {
-      const user = new User({ username: username, email: email, password: password });
-      user.save(function (err, user) {
-        if (err) {
-          res.status(500);
-          res.send({"error": err});
-        };
+      const newPass = await bcrypt.hash(password, saltRounds);
+      
+      setConnect(async () => {
+        const user = new User({ username: username, email: email, hash: newPass});
+        await user.save();
         res.status(201);
         res.send(user);
       });
-    });
+
+    } catch (err) {
+      res.status(500);
+      res.send({"error: ": err});
+    }
+
+
 
   });
 
@@ -60,7 +69,7 @@ import User from '../models/userModel';
           res.status(400);
           res.send({"error": err});
         }
-  
+
         res.status(204);
         res.send(data);
       });
@@ -77,7 +86,7 @@ import User from '../models/userModel';
           res.status(500);
           res.send({ "error": err });
         }
-  
+
         res.status(200);
         res.send({"message": "User deleted."});
       });

@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
+    unique: [true, 'This username may already be in use.'],
     required: [true, 'Username is required.']
   },
   //email: String,
@@ -16,7 +17,6 @@ const userSchema = new mongoose.Schema({
     },
     required: [true, 'User email is required.']
   },
-  salt: String,
   hash: String,
   loginKeys: [],
   categories: []  

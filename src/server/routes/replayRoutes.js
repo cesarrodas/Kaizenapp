@@ -3,6 +3,22 @@ import Replay from '../models/replayModel';
 
 export const replayRoutes = (app) => {
 
+  app.get('/api/replays/process/:id', (req, res) => {
+    const id = req.params.id;
+
+    setConnect(() => {
+      Replay.find({ process: id }, (err, replays) => {
+        if (err) {
+          res.status(404);
+          res.send({ message: "Replays not found."});
+        }
+
+        res.status(200);
+        res.send(replays);
+      });
+    });
+  });
+
   app.get('/api/replay/:id', (req, res) => {
     const id = req.params.id;
 
@@ -19,7 +35,7 @@ export const replayRoutes = (app) => {
     });
   });
   
-  app.get('/api/replay/create', (req, res) => {
+  app.post('/api/replay/create', (req, res) => {
     const { name, detail, process, creator } = req.body;
  
     setConnect(() => {
