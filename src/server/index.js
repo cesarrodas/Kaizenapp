@@ -7,8 +7,11 @@ import { connectDB } from './connect-db';
 import mongoose from 'mongoose';
 import { userRoutes } from './routes/userRoutes';
 import { processRoutes } from './routes/processRoutes';
+import { replayRoutes } from './routes/replayRoutes';
+import { authRoutes } from './routes/authRoutes';
 
 mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -17,6 +20,8 @@ app.use(bodyParser.json());
 //require('./routes/userRoutes')(app);
 userRoutes(app);
 processRoutes(app);
+replayRoutes(app);
+authRoutes(app);
 
 connectDB();
 let db = mongoose.connection;
