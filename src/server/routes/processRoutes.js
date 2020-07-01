@@ -1,5 +1,6 @@
 import { setConnect } from '../connect-db';
 import Process from '../models/processModel'; 
+import { authentication } from './authRoutes';
 
 export const processRoutes = (app) => {
 
@@ -19,7 +20,7 @@ export const processRoutes = (app) => {
     });
   });
 
-  app.get('/api/processes/:id', (req, res) => {
+  app.get('/api/processes/:id', authentication, (req, res) => {
     const id = req.params.id;
 
     setConnect(() => {
@@ -28,7 +29,9 @@ export const processRoutes = (app) => {
           res.status(404);
           res.send({ message: "Process not found." });
         }
-  
+        if(req.time){
+          
+        }
         res.status(200);
         res.send(process);
       });
