@@ -29,9 +29,7 @@ export const processRoutes = (app) => {
           res.status(404);
           res.send({ message: "Process not found." });
         }
-        if(req.time){
-          
-        }
+  
         res.status(200);
         res.send(process);
       });
