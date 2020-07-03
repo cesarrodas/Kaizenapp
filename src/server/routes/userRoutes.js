@@ -3,6 +3,7 @@ import { setConnect } from '../connect-db';
 import User from '../models/userModel'; 
 
 import bcrypt from 'bcrypt';
+import { successHandler } from './authRoutes';
 
 const saltRounds = 12;
 
@@ -19,7 +20,7 @@ export const userRoutes = (app) => {
         }
 
         res.status(200);
-        res.send(user);
+        successHandler(req, res, user);
       });
     });
   });
@@ -35,7 +36,7 @@ export const userRoutes = (app) => {
         const user = new User({ username: username, email: email, hash: newPass});
         await user.save();
         res.status(201);
-        res.send(user);
+        successHandler(req, res, user);
       });
 
     } catch (err) {
@@ -71,7 +72,7 @@ export const userRoutes = (app) => {
         }
 
         res.status(204);
-        res.send(data);
+        successHandler(req, res, data);
       });
     });
   });
@@ -88,7 +89,7 @@ export const userRoutes = (app) => {
         }
 
         res.status(200);
-        res.send({"message": "User deleted."});
+        successHandler(req, res, {"message": "User deleted. "});
       });
     });
   });

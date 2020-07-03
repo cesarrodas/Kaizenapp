@@ -1,5 +1,6 @@
 import { setConnect } from '../connect-db';
 import Replay from '../models/replayModel'; 
+import { successHandler } from './authRoutes';
 
 export const replayRoutes = (app) => {
 
@@ -14,7 +15,7 @@ export const replayRoutes = (app) => {
         }
 
         res.status(200);
-        res.send(replays);
+        successHandler(req, res, replays);
       });
     });
   });
@@ -30,7 +31,7 @@ export const replayRoutes = (app) => {
         }
   
         res.status(200);
-        res.send(replay);
+        successHandler(req, res, replay);
       })
     });
   });
@@ -46,7 +47,7 @@ export const replayRoutes = (app) => {
           res.send({"error": err});
         };
         res.status(201);
-        res.send(newReplay);
+        successHandler(req, res, newReplay);
       });
     });
   });
@@ -75,7 +76,7 @@ export const replayRoutes = (app) => {
         }
   
         res.status(204);
-        res.send(replay);
+        successHandler(req, res, replay);
       });
     });
   });

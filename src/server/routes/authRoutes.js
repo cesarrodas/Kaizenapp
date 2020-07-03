@@ -72,8 +72,7 @@ export const authentication = (req, res, next) => {
 
 } 
 
-export const successHandler = (data, res) => {
-  res.status(200);
+export const successHandler = (req, res, data) => {
   if(req.token){
     res.send({ data: data, token: req.token });
   } else {

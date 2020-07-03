@@ -1,6 +1,6 @@
 import { setConnect } from '../connect-db';
 import Process from '../models/processModel'; 
-import { authentication } from './authRoutes';
+import { authentication, successHandler } from './authRoutes';
 
 export const processRoutes = (app) => {
 
@@ -15,7 +15,7 @@ export const processRoutes = (app) => {
         }
 
         res.status(200);
-        res.send(processes);
+        successHandler(req, res, processes);
       });
     });
   });
@@ -29,9 +29,9 @@ export const processRoutes = (app) => {
           res.status(404);
           res.send({ message: "Process not found." });
         }
-  
+        
         res.status(200);
-        res.send(process);
+        successHandler(req, res, process);
       });
     });
   });
@@ -47,7 +47,7 @@ export const processRoutes = (app) => {
           res.send({"error": err});
         };
         res.status(201);
-        res.send(process);
+        successHandler(req, res, process);
       });
     });
   });
@@ -68,7 +68,7 @@ export const processRoutes = (app) => {
         }
   
         res.status(204);
-        res.send(process);
+        successHandler(req, res, process);
       });
     });
   });
@@ -84,7 +84,7 @@ export const processRoutes = (app) => {
         }
   
         res.status(200);
-        res.send({"message": "Process deleted."});
+        res.send({ message: "Process deleted." });
       });
     });
   });
