@@ -1,6 +1,6 @@
 import { setConnect } from '../connect-db';
 import Process from '../models/processModel'; 
-import { authentication, successHandler } from './authRoutes';
+import { authentication, responseHandler } from './authRoutes';
 
 export const processRoutes = (app) => {
 
@@ -11,11 +11,11 @@ export const processRoutes = (app) => {
       Process.find({ creator: userId }, (err, processes) => {
         if ( err ) { 
           res.status(404);
-          res.send({ message: "Processes not found." });
+          responseHandler(req, res, { message: "Processes not found." });
         }
 
         res.status(200);
-        successHandler(req, res, processes);
+        responseHandler(req, res, processes);
       });
     });
   });
@@ -27,11 +27,11 @@ export const processRoutes = (app) => {
       Process.findOne({ _id: id }, (err, process) => {
         if ( err ) { 
           res.status(404);
-          res.send({ message: "Process not found." });
+          responseHandler(req, res, { message: "Process not found." });
         }
         
         res.status(200);
-        successHandler(req, res, process);
+        responseHandler(req, res, process);
       });
     });
   });
@@ -44,10 +44,10 @@ export const processRoutes = (app) => {
       process.save(function (err, process) {
         if (err) {
           res.status(500);
-          res.send({"error": err});
+          responseHandler(req, res, { error: err });
         };
         res.status(201);
-        successHandler(req, res, process);
+        responseHandler(req, res, process);
       });
     });
   });
@@ -64,11 +64,11 @@ export const processRoutes = (app) => {
       Process.findOneAndUpdate({ _id: id }, newProcess, (err, process) => {
         if(err){
           res.status(400);
-          res.send({"error": err});
+          responseHandler(req, res, { error: err });
         }
   
         res.status(204);
-        successHandler(req, res, process);
+        responseHandler(req, res, process);
       });
     });
   });
@@ -80,11 +80,11 @@ export const processRoutes = (app) => {
       Process.findOneAndDelete({ _id: id }, (err) => {
         if(err){
           res.status(500);
-          res.send({ "error": err });
+          responseHandler(req, res, { error: err });
         }
   
         res.status(200);
-        res.send({ message: "Process deleted." });
+        responseHandler(req, res, { message: "Process deleted." });
       });
     });
   });

@@ -3,7 +3,7 @@ import { setConnect } from '../connect-db';
 import User from '../models/userModel'; 
 
 import bcrypt from 'bcrypt';
-import { successHandler } from './authRoutes';
+import { responseHandler } from './authRoutes';
 
 const saltRounds = 12;
 
@@ -16,11 +16,11 @@ export const userRoutes = (app) => {
       User.findOne({ _id: id }, (err, user) => {
         if ( err ) {
           res.status(404);
-          res.send({ message: "User not found." });
+          responseHandler(req, res, { message: "User not found." });
         }
 
         res.status(200);
-        successHandler(req, res, user);
+        responseHandler(req, res, user);
       });
     });
   });
@@ -36,12 +36,12 @@ export const userRoutes = (app) => {
         const user = new User({ username: username, email: email, hash: newPass});
         await user.save();
         res.status(201);
-        successHandler(req, res, user);
+        responseHandler(req, res, user);
       });
 
     } catch (err) {
       res.status(500);
-      res.send({"error: ": err});
+      responseHandler(req, res, { error: err });
     }
 
 
@@ -68,11 +68,11 @@ export const userRoutes = (app) => {
         if(err){
           console.log(err);
           res.status(400);
-          res.send({"error": err});
+          responseHandler(req, res, { error: err })
         }
 
         res.status(204);
-        successHandler(req, res, data);
+        responseHandler(req, res, data);
       });
     });
   });
@@ -85,11 +85,11 @@ export const userRoutes = (app) => {
       User.findOneAndDelete({ _id: id }, (err) => {
         if(err){
           res.status(500);
-          res.send({ "error": err });
+          responseHandler(req, res, { error: err });
         }
 
         res.status(200);
-        successHandler(req, res, {"message": "User deleted. "});
+        responseHandler(req, res, { message: "User deleted."});
       });
     });
   });

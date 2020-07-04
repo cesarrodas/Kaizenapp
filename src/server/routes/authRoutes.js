@@ -39,7 +39,6 @@ export const authRoutes = ( app ) => {
 }
 
 export const authentication = (req, res, next) => {
-  // We want to check the json web token in the headers.
   const Unauthorized = (err) => {
     res.status(401);
     res.send({ error: err });
@@ -49,9 +48,6 @@ export const authentication = (req, res, next) => {
     const token = req.headers.authorization.replace("Bearer ", "");
     try {
       const decoded = jsonwebtoken.verify(token, process.env.PRIVATE_KEY);
-      console.log("DECODED data: ", decoded);
-      console.log("EXPIRES: ", decoded.apiExp);
-      console.log("TIME RIGHT NOW", new Date().getTime());
 
       if(decoded.apiExp - new Date().getTime() > 0){
         next();
@@ -72,7 +68,7 @@ export const authentication = (req, res, next) => {
 
 } 
 
-export const successHandler = (req, res, data) => {
+export const responseHandler = (req, res, data) => {
   if(req.token){
     res.send({ data: data, token: req.token });
   } else {
