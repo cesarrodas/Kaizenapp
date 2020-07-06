@@ -1,5 +1,9 @@
 import React from 'react';
 
 export const Main = () => (
-  <h1>Hello World!</h1>
+  <div>
+    <h1>Kaizen</h1>
+    <div>Improve your routine.</div>
+  </div>
 );
+
