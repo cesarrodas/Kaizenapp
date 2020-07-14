@@ -1,26 +1,26 @@
 // This is essentially what a definition of constants would look like. 
-export const ADD_TODO = 'ADD_TODO';
-export const TOGGLE_TODO = 'TOGGLE_TODO';
-export const SET_VISIBILITY_FILTER = 'SET_VISIBILITY_FILTER';
+
+export const REQUEST_AUTHENTICATE_USER = 'REQUEST_AUTHENTICATE_USER';
+export const PROCESSING_AUTHENTICATE_USER = 'PROCESSING_AUTHENTICATE_USER';
+export const AUTHENTICATING = 'AUTHENTICATING';
+export const AUTHENTICATED = 'AUTHENTICATED';
+export const NOT_AUTHENTICATED = 'NOT_AUTHENTICATED';
 
 /*
  * other constants
  */
 
+ //example of choices for a selector.
 export const VisibilityFilters = {
   SHOW_ALL: 'SHOW_ALL',
   SHOW_COMPLETED: 'SHOW_COMPLETED',
   SHOW_ACTIVE: 'SHOW_ACTIVE'
 }
 
-export function addTodo(text) {
-  return { type: ADD_TODO, text }
-}
+// action creators will be here
 
-export function toggleTodo(index) {
-  return { type: TOGGLE_TODO, index }
-}
-
-export function setVisibilityFilter(filter) {
-  return { type: SET_VISIBILITY_FILTER, filter }
-}
+export const requestAuthenticateUser = (username, password) => ({
+  type: REQUEST_AUTHENTICATE_USER,
+  username,
+  password
+});
