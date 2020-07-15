@@ -5,6 +5,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 import { connectDB } from './connect-db';
 import mongoose from 'mongoose';
+import cors from 'cors';
+
 import { userRoutes } from './routes/userRoutes';
 import { processRoutes } from './routes/processRoutes';
 import { replayRoutes } from './routes/replayRoutes';
@@ -14,6 +16,8 @@ mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 
 const app = express();
+
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 

@@ -1,4 +1,4 @@
-const authentication = (state = 0, action) => {
+const something = (state = 0, action) => {
   switch (action.type) {
     case 'INCREMENT':
       return state + 1
@@ -9,4 +9,4 @@ const authentication = (state = 0, action) => {
   }
 }
 
-export default authentication;
+export default something;

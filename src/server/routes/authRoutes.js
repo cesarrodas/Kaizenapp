@@ -24,9 +24,9 @@ export const authRoutes = ( app ) => {
           const token = jsonwebtoken.sign({ username: user.username, apiExp: exp }, process.env.PRIVATE_KEY, { expiresIn: '7d'});
           
           res.status(200);
-          res.send({ token: token });
+          res.send({ token: token, user });
         } else {
-          throw "Unable to login";
+          throw "Unable to verify user existance.";
         }
 
       } catch (err) {
