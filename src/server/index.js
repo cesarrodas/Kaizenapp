@@ -17,7 +17,12 @@ mongoose.set('useCreateIndex', true);
 
 const app = express();
 
-app.use(cors());
+var corsOptions = {
+  origin: 'http://localhost:8080',
+  credentials: true
+}
+
+app.use(cors(corsOptions));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 

@@ -39,7 +39,7 @@ export function* userAuthenticationSaga(){
     const { username, password } = yield take(actions.REQUEST_AUTHENTICATE_USER);
   
     try {
-      const { data } = yield axios.post(url + '/api/authenticate', {username, password})
+      const { data } = yield axios.post(url + '/api/authenticate', {username, password}, { withCredentials: true })
       if(!data){
         console.log("Error maybe???");
         throw new Error();

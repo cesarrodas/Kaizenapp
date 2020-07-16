@@ -2,9 +2,21 @@ import { setConnect } from '../connect-db';
 import User from '../models/userModel';
 import bcrypt from 'bcrypt';
 import jsonwebtoken from 'jsonwebtoken';
+import { useSelector } from 'react-redux';
 
 const addMinutes = (date, minutes) => {
   return new Date(date.getTime() + minutes*60000).getTime();
+}
+
+const filterObject = (keysToRemove, object) => {
+	let newObject = {};
+  	let keys = Object.keys(object);
+  	for(let i = 0; i < keys.length; i++){
+    	if(keysToRemove.indexOf(keys[i]) == -1){
+        	newObject[keys[i]] = object[keys[i]];		                             
+        }
+    }
+	return newObject;
 }
 
 export const authRoutes = ( app ) => {
@@ -23,8 +35,13 @@ export const authRoutes = ( app ) => {
         if(match){
           const token = jsonwebtoken.sign({ username: user.username, apiExp: exp }, process.env.PRIVATE_KEY, { expiresIn: '7d'});
           
+          let newUser = filterObject(["hash", "loginKeys"], user._doc);
+
           res.status(200);
-          res.send({ token: token, user });
+          res.cookie('access_token', 'Bearer ' + token, {
+            expires: new Date(Date.now() + 168 * 3600000)
+          });
+          res.send({ token: token, user: newUser });
         } else {
           throw "Unable to verify user existance.";
         }
@@ -56,6 +73,9 @@ export const authentication = (req, res, next) => {
         const exp = addMinutes(new Date(), 15);
         const newToken = jsonwebtoken.sign({ username: decoded.username, apiExp: exp }, process.env.PRIVATE_KEY, { expiresIn: '7d'});
         req.token = newToken;
+        res.cookie('access_token', 'Bearer ' + newToken, {
+          expires: new Date(Date.now() + 168 * 3600000)
+        });
         next();
       }
 
