@@ -1,6 +1,8 @@
 import React from 'react';
 
+import { compose } from 'redux';
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom';
 import { requestAuthenticateUser } from '../state/actions/actions';
 
 class Login extends React.Component {
@@ -16,6 +18,12 @@ class Login extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
 
+  }
+
+  componentDidUpdate(prevProps){
+    if(prevProps.auth.loggedIn === false && this.props.auth.loggedIn === true){
+      this.props.history.push('/');
+    }
   }
   
   handleSubmit(event){
@@ -51,9 +59,15 @@ class Login extends React.Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  return {
+    auth: state.auth
+  }
+}
+
 const mapDispatchToProps = { requestAuthenticateUser }
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(Login)
+export default compose(
+  withRouter,
+  connect(mapStateToProps, mapDispatchToProps)
+)(Login);

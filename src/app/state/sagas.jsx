@@ -5,7 +5,7 @@ import axios from 'axios';
 
 const url = "http://localhost:3000";
 
-const delay = (ms) => new Promise(res => setTimeout(res, ms));
+//const delay = (ms) => new Promise(res => setTimeout(res, ms));
 
 // export function* incrementAsync() {
 //   yield delay(1000)
@@ -37,24 +37,18 @@ export function* userRegistrationSaga(){
 export function* userAuthenticationSaga(){
   while(true){
     const { username, password } = yield take(actions.REQUEST_AUTHENTICATE_USER);
-  
+    yield put(actions.authenticating());
     try {
       const { data } = yield axios.post(url + '/api/authenticate', {username, password}, { withCredentials: true })
       if(!data){
-        console.log("Error maybe???");
-        throw new Error();
+        throw new Error("User not found.");
       }
       
-      put(actions.authenticated(data));
+      yield put(actions.authenticated(data.user));
       console.log("Authenticated!", data);
-  
-      //yield put(mutations.setState(data.state));
-      //yield put(mutations.processAuthenticateUser(mutations.AUTHENTICATED));
-  
-      //history.push('/dashboard');
+
     } catch (e) {
-      console.log("Can't authenticate: ", e);
-      //yield put(actions.processAuthenticateUser(actions.NOT_AUTHENTICATED));
+      yield put(actions.notAuthenticated());
     }
   }
 }

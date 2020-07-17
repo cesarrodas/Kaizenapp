@@ -3,7 +3,7 @@ import createSagaMiddleware from 'redux-saga';
 import { createLogger } from 'redux-logger';
 // applyMiddleware from redux
 import counter from './reducers/counter';
-import something from './reducers/something';
+import authenticationReducer from './reducers/authentication';
 
 import * as sagas from './sagas';
 
@@ -14,7 +14,7 @@ const sagaMiddleware = createSagaMiddleware();
 
 const store = createStore(combineReducers({
   counter: counter,
-  something: something
+  auth: authenticationReducer
 }), applyMiddleware(createLogger() ,sagaMiddleware));
 
 for(let saga in sagas){

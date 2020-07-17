@@ -39,7 +39,16 @@ export const requestRegisterUser = (username, password, email) => ({
   email
 });
 
+export const authenticating = () => ({
+  type: AUTHENTICATING
+});
+
 export const authenticated = ( userData ) => ({
   type: AUTHENTICATED,
-  userData
+  payload: userData
 });
+
+export const notAuthenticated = () => ({
+  type: NOT_AUTHENTICATED
+});
+

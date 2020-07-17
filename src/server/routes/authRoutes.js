@@ -38,7 +38,7 @@ export const authRoutes = ( app ) => {
           let newUser = filterObject(["hash", "loginKeys"], user._doc);
 
           res.status(200);
-          res.cookie('access_token', 'Bearer ' + token, {
+          res.cookie('access_token', token, {
             expires: new Date(Date.now() + 168 * 3600000)
           });
           res.send({ token: token, user: newUser });
@@ -73,7 +73,7 @@ export const authentication = (req, res, next) => {
         const exp = addMinutes(new Date(), 15);
         const newToken = jsonwebtoken.sign({ username: decoded.username, apiExp: exp }, process.env.PRIVATE_KEY, { expiresIn: '7d'});
         req.token = newToken;
-        res.cookie('access_token', 'Bearer ' + newToken, {
+        res.cookie('access_token', newToken, {
           expires: new Date(Date.now() + 168 * 3600000)
         });
         next();
