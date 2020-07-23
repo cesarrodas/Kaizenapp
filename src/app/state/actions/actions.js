@@ -10,9 +10,8 @@ export const NOT_AUTHENTICATED = 'NOT_AUTHENTICATED';
 // I need similar events for signing up.
 export const REQUEST_REGISTER_USER = 'REQUEST_REGISTER_USER';
 export const PROCESSING_REGISTER_USER = 'PROCESSING_REGISTER_USER';
-export const REGISTERING = 'REGISTERING';
-export const REGISTERED = 'REGISTERED';
-export const NOT_REGISTERED = 'NOT_REGISTERED';
+export const REGISTRATION_COMPLETE = 'REGISTRATION_COMPLETE';
+export const REGISTRATION_FAILED = 'REGISTRATION_FAILED';
 /*
  * other constants
  */
@@ -50,5 +49,17 @@ export const authenticated = ( userData ) => ({
 
 export const notAuthenticated = () => ({
   type: NOT_AUTHENTICATED
+});
+
+export const processRegisterUser = () => ({
+  type: PROCESSING_REGISTER_USER
+});
+
+export const registered = () => ({
+  type: REGISTRATION_COMPLETE
+});
+
+export const registrationFailed = () => ({
+  type: REGISTRATION_FAILED
 });
 

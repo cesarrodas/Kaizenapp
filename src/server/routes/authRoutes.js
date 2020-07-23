@@ -1,8 +1,7 @@
-import { setConnect } from '../connect-db';
 import User from '../models/userModel';
 import bcrypt from 'bcrypt';
 import jsonwebtoken from 'jsonwebtoken';
-import { useSelector } from 'react-redux';
+//import { useSelector } from 'react-redux';
 
 const addMinutes = (date, minutes) => {
   return new Date(date.getTime() + minutes*60000).getTime();
@@ -24,33 +23,31 @@ export const authRoutes = ( app ) => {
   app.post('/api/authenticate', async (req, res) => {
     const  { username, password } = req.body;
 
-    setConnect( async () => {
-      try {
-        const user = await User.findOne({ username: username });
+    try {
+      const user = await User.findOne({ username: username });
 
-        const match = await bcrypt.compare(password, user.hash);
+      const match = await bcrypt.compare(password, user.hash);
 
-        const exp = addMinutes(new Date(), 15);
+      const exp = addMinutes(new Date(), 15);
 
-        if(match){
-          const token = jsonwebtoken.sign({ username: user.username, apiExp: exp }, process.env.PRIVATE_KEY, { expiresIn: '7d'});
-          
-          let newUser = filterObject(["hash", "loginKeys"], user._doc);
+      if(match){
+        const token = jsonwebtoken.sign({ username: user.username, apiExp: exp }, process.env.PRIVATE_KEY, { expiresIn: '7d'});
+        
+        let newUser = filterObject(["hash", "loginKeys"], user._doc);
 
-          res.status(200);
-          res.cookie('access_token', token, {
-            expires: new Date(Date.now() + 168 * 3600000)
-          });
-          res.send({ token: token, user: newUser });
-        } else {
-          throw "Unable to verify user existance.";
-        }
-
-      } catch (err) {
-        res.status(500);
-        res.send({"error: ": "Unable to verify user."});
+        res.status(200);
+        res.cookie('access_token', token, {
+          expires: new Date(Date.now() + 168 * 3600000)
+        });
+        res.send({ token: token, user: newUser });
+      } else {
+        throw "Unable to verify user existance.";
       }
-    });
+
+    } catch (err) {
+      res.status(500);
+      res.send({"error: ": "Unable to verify user."});
+    }
   });
 
 }

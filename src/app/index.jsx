@@ -17,6 +17,9 @@ const RouteGuard = Component => ({match}) => {
   }
 } 
 
+// Idk what i am doing anymore. or why I am doing what I am doing. I need to get really drink.
+// I really like killing it hard. I need to figure something out. the horse. 
+
 ReactDOM.render(
   <BrowserRouter>
     <Provider store={store}>

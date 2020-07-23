@@ -33,11 +33,12 @@ replayRoutes(app);
 authRoutes(app);
 
 connectDB();
-let db = mongoose.connection;
-db.on('error', (err) => {console.log("error: ", err)});
-db.once('open', () => {
-  console.log("connection opened");
-});
+// let db = mongoose.connection;
+// db.on('error', (err) => {console.log("error: ", err)});
+// db.once('open', () => {
+//   console.log("connection opened");
+// });
+
 
 //const Item = require('./models/Item');
 let items = [

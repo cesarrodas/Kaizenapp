@@ -6,7 +6,6 @@ const userSchema = new mongoose.Schema({
     unique: [true, 'This username may already be in use.'],
     required: [true, 'Username is required.']
   },
-  //email: String,
   email: {
     type: String,
     validate: {
@@ -25,6 +24,6 @@ const userSchema = new mongoose.Schema({
   timestamps: true
 });
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model('User', userSchema);  
 
 export default User;

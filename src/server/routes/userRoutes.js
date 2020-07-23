@@ -1,6 +1,11 @@
-import { setConnect } from '../connect-db';
+import mongoose from 'mongoose';
+
 //import mongoose from 'mongoose';
 import User from '../models/userModel'; 
+
+const db = mongoose.connection;
+
+import { checkExistance } from '../validators/userValidators';
 
 import bcrypt from 'bcrypt';
 import { responseHandler } from './authRoutes';
@@ -12,16 +17,14 @@ export const userRoutes = (app) => {
   app.get('/api/users/:id', (req, res) => {
     const id = req.params.id;
 
-    setConnect(() => {
-      User.findOne({ _id: id }, (err, user) => {
-        if ( err ) {
-          res.status(404);
-          responseHandler(req, res, { message: "User not found." });
-        }
+    User.findOne({ _id: id }, (err, user) => {
+      if ( err ) {
+        res.status(404);
+        responseHandler(req, res, { message: "User not found." });
+      }
 
-        res.status(200);
-        responseHandler(req, res, user);
-      });
+      res.status(200);
+      responseHandler(req, res, user);
     });
   });
 
@@ -31,20 +34,29 @@ export const userRoutes = (app) => {
     try {
 
       const newPass = await bcrypt.hash(password, saltRounds);
+      const uniqueUser = await checkExistance(username);
+      console.log("uniqueUser: ", uniqueUser);
       
-      setConnect(async () => {
-        const user = new User({ username: username, email: email, hash: newPass});
+      
+      const user = new User({ username: username, email: email, hash: newPass});
+      //const errors = user.validateSync();
+
+      // user.validate().catch(error => {
+      //   throw new error(error);
+      // });
+
+      if(uniqueUser == false){
+        throw new Error('Username is already in use.');
+      }
+      
+      if(uniqueUser){        
         await user.save();
         res.status(201);
-        responseHandler(req, res, user);
-      });
-
+      }
     } catch (err) {
       res.status(500);
       responseHandler(req, res, { error: err });
     }
-
-
 
   });
 
@@ -63,17 +75,16 @@ export const userRoutes = (app) => {
     if(req.body.email){
       newUser.email = req.body.email;
     }
-    setConnect(() => {
-      User.findOneAndUpdate({ _id: id }, newUser, (err, data) => {
-        if(err){
-          console.log(err);
-          res.status(400);
-          responseHandler(req, res, { error: err })
-        }
 
-        res.status(204);
-        responseHandler(req, res, data);
-      });
+    User.findOneAndUpdate({ _id: id }, newUser, (err, data) => {
+      if(err){
+        console.log(err);
+        res.status(400);
+        responseHandler(req, res, { error: err })
+      }
+
+      res.status(204);
+      responseHandler(req, res, data);
     });
   });
 
@@ -81,16 +92,14 @@ export const userRoutes = (app) => {
     // here we will delete a user from the db.
     const id = req.params.id;
     //res.json(req);
-    setConnect(() => {
-      User.findOneAndDelete({ _id: id }, (err) => {
-        if(err){
-          res.status(500);
-          responseHandler(req, res, { error: err });
-        }
+    User.findOneAndDelete({ _id: id }, (err) => {
+      if(err){
+        res.status(500);
+        responseHandler(req, res, { error: err });
+      }
 
-        res.status(200);
-        responseHandler(req, res, { message: "User deleted."});
-      });
+      res.status(200);
+      responseHandler(req, res, { message: "User deleted."});
     });
   });
 }

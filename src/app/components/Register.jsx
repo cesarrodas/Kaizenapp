@@ -18,6 +18,12 @@ class Register extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  // componentDidUpdate(prevProps){
+  //   if(prevProps.auth.loggedIn === false && this.props.auth.loggedIn === true){
+  //     this.props.history.push('/');
+  //   }
+  // }
+
   handleSubmit(event){
     // handle it here
     event.preventDefault();

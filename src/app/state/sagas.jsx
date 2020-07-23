@@ -21,15 +21,19 @@ export function* userRegistrationSaga(){
   while(true){
     const { username, email, password } = yield take(actions.REQUEST_REGISTER_USER);
 
+    yield put(actions.processRegisterUser());
     try {
       const { data } = yield axios.post(url + '/api/users/create', { username, password, email });
+
       if(!data){
-        throw new Error();
+        yield put(actions.registrationFailed());
+        throw new Error("Data not retrieved");
       }
 
-      console.log("user Created! ", data);
+      //console.log("user Created! ", data);
+      yield put(actions.registered());
     } catch (e) {
-      console.log("Could not register: ", e);
+      yield put(actions.registrationFailed({ error: e }));
     }
   }
 }

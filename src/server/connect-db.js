@@ -10,8 +10,8 @@ export async function connectDB() {
 
 export async function setConnect(cb){
   let result = connectDB();
-  result.catch((err) => { console.log("Error: ", err) });
+  result.catch((err) => { return err; });
   result.then(() => {
-    cb();
+    return cb();
   });
 };
