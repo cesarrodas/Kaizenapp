@@ -1,52 +1,65 @@
-import Replay from '../models/replayModel'; 
-import { responseHandler } from './authRoutes';
+import Replay from '../models/replayModel';
+import { sureThing, responseFinalizer } from '../../helpers';
 
 export const replayRoutes = (app) => {
 
-  app.get('/api/replays/process/:id', (req, res) => {
+  app.get('/api/replays/process/:id', async (req, res) => {
     const id = req.params.id;
 
-    Replay.find({ process: id }, (err, replays) => {
-      if (err) {
-        res.status(404);
-        responseHandler(req, res, { message: "Replays not found." });
-      }
-
-      res.status(200);
-      responseHandler(req, res, replays);
+    const replays = await sureThing(Replay.find({ process: id }).exec(), {
+      success: 'success',
+      rejected: 'The replays were not found.'
     });
+
+    if(!replays.ok) {
+      res.status(404)
+      responseFinalizer(req, res, replays);
+    }
+
+    res.status(200);
+    responseFinalizer(req, res, replays);
 
   });
 
-  app.get('/api/replay/:id', (req, res) => {
+  app.get('/api/replay/:id', async (req, res) => {
     const id = req.params.id;
 
-    Replay.findOne({ _id: id }, (err, replay) => {
-      if ( err ) { 
-        res.status(404);
-        responseHandler(req, res, { message: "Replay not found." });
-      }
-
-      res.status(200);
-      responseHandler(req, res, replay);
+    const foundReplay = await sureThing(Replay.findOne({ _id: id }).exec(), {
+      success: 'success',
+      rejected: 'The replay was not found.'
     });
+
+    if(!foundReplay.ok){
+      res.status(404);
+      responseFinalizer(req, res, foundReplay);
+    }
+
+    res.status(200);
+    responseFinalizer(req, res, foundReplay);
+
   });
   
-  app.post('/api/replay/create', (req, res) => {
+  app.post('/api/replay/create', async (req, res) => {
     const { name, detail, process, creator } = req.body;
  
     const newReplay = new Replay({ name: name, detail: detail, process: process, creator: creator });
-    newReplay.save(function (err, newReplay) {
-      if (err) {
-        res.status(500);
-        responseHandler(req, res, { error: err });
-      };
-      res.status(201);
-      responseHandler(req, res, newReplay);
-    });
+
+    const saveReplay = await sureThing(newReplay.save(), {
+      success: 'success',
+      rejected: 'Replay failed to save.'
+    }); 
+
+    if(!saveReplay.ok){
+      res.status(500);
+      responseFinalizer(req, res, saveReplay);
+    }
+
+    res.status(200);
+    responseFinalizer(req, res, saveReplay);
+
   });
 
-  app.put('/api/replay/:id', (req, res) => {
+  app.put('/api/replay/:id', async (req, res) => {
     const newReplay = {};
     const id = req.params.id;
 
@@ -62,28 +75,35 @@ export const replayRoutes = (app) => {
       newReplay.process = req.body.process;
     }
 
-    Replay.findOneAndUpdate({ _id: id }, newReplay, (err, replay) => {
-      if(err){
-        res.status(400);
-        responseHandler(req, res, { error: err });
-      }
-
-      res.status(204);
-      responseHandler(req, res, replay);
+    const updatedReplay = await sureThing(Replay.findOneAndUpdate({ _id: id }, newReplay), {
+      success: 'success',
+      rejected: 'Replay failed to update.'
     });
+
+    if(!updatedReplay.ok){
+      res.status(400);
+      responseFinalizer(req, res, updatedReplay);
+    }
+
+    res.status(202);
+    responseFinalizer(req, res, updatedReplay);
+
   });
 
-  app.delete('/api/replay/:id', (req, res) => {
+  app.delete('/api/replay/:id', async (req, res) => {
     const id = req.params.id;
 
-    Replay.findOneAndDelete({ _id: id }, (err) => {
-      if(err){
-        res.status(500);
-        responseHandler(req, res, { error: err });
-      }
-
-      res.status(200);
-      responseHandler(req, res, { message: "Replay deleted." });
+    const deleted = await sureThing(Replay.findOneAndDelete({ _id: id }), {
+      success: "success",
+      rejected: "Replay was not deleted."
     });
+
+    if(!deleted.ok){
+      res.status(500);
+    }
+
+    res.status(200);
+    responseFinalizer(req, res, deleted);
+
   });
 }

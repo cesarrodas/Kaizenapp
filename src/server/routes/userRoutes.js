@@ -1,66 +1,65 @@
-import mongoose from 'mongoose';
+import { sureThing, responseFinalizer } from '../../helpers';
+import { checkExistance } from '../validators/userValidators';
 
 //import mongoose from 'mongoose';
 import User from '../models/userModel'; 
-
-const db = mongoose.connection;
-
-import { checkExistance } from '../validators/userValidators';
-
 import bcrypt from 'bcrypt';
-import { responseHandler } from './authRoutes';
 
 const saltRounds = 12;
 
 export const userRoutes = (app) => {
 
-  app.get('/api/users/:id', (req, res) => {
+  app.get('/api/users/:id', async (req, res) => {
     const id = req.params.id;
 
-    User.findOne({ _id: id }, (err, user) => {
-      if ( err ) {
-        res.status(404);
-        responseHandler(req, res, { message: "User not found." });
-      }
-
-      res.status(200);
-      responseHandler(req, res, user);
+    const response = await sureThing(User.findOne({ _id: id }).select('categories _id username email createdAt updatedAt').exec(), {
+      success: "success",
+      rejected: "The user was not found."
     });
+
+    if(response.ok){
+      res.status(200);
+      responseFinalizer(req, res, response);
+    } else {
+      res.status(404);
+      responseFinalizer(req, res, response);
+    }
   });
 
   app.post('/api/users/create', async function(req, res){
 
     const { username, email, password } = req.body;
-    try {
+    const newPass = await sureThing(bcrypt.hash(password, saltRounds));
 
-      const newPass = await bcrypt.hash(password, saltRounds);
-      const uniqueUser = await checkExistance(username);
-      console.log("uniqueUser: ", uniqueUser);
-      
-      
-      const user = new User({ username: username, email: email, hash: newPass});
-      //const errors = user.validateSync();
-
-      // user.validate().catch(error => {
-      //   throw new error(error);
-      // });
-
-      if(uniqueUser == false){
-        throw new Error('Username is already in use.');
-      }
-      
-      if(uniqueUser){        
-        await user.save();
-        res.status(201);
-      }
-    } catch (err) {
+    if (!newPass) {
       res.status(500);
-      responseHandler(req, res, { error: err });
+      responseFinalizer(req, res, newPass);
     }
+
+    const user = new User({ username: username, email: email, hash: newPass});
+
+    const uniqueUsername = await sureThing(checkExistance(username), {
+      success: "success",
+      rejected: "This username is already in use."
+    });
+
+    if (!uniqueUsername.ok){
+      res.status(400);
+      responseFinalizer(req, res, uniqueUsername);
+    }
+
+    const response = await sureThing(user.save());
+    if(!response){
+      res.status(500);
+      responseFinalizer(req, res, response);
+    }
+
+    res.status(201);
+    responseFinalizer(req, res, { ok: true, message: "User created." });
 
   });
 
-  app.put('/api/users/:id', (req, res) => {
+  app.put('/api/users/:id', async (req, res) => {
     let newUser = {};
     const id = req.params.id;
 
@@ -76,31 +75,36 @@ export const userRoutes = (app) => {
       newUser.email = req.body.email;
     }
 
-    User.findOneAndUpdate({ _id: id }, newUser, (err, data) => {
-      if(err){
-        console.log(err);
-        res.status(400);
-        responseHandler(req, res, { error: err })
-      }
-
-      res.status(204);
-      responseHandler(req, res, data);
+    const updated = await sureThing(User.findOneAndUpdate({ _id: id }, newUser ), {
+      success: "success",
+      rejected: "User update failed."
     });
+
+    if(!updated.ok){
+      res.status(400);
+      responseFinalizer(req, res, updated)
+    }
+
+    res.status(202);
+    responseFinalizer(req, res, updated);
   });
 
-  app.delete('/api/users/:id', function (req, res){
-    // here we will delete a user from the db.
-    const id = req.params.id;
-    //res.json(req);
-    User.findOneAndDelete({ _id: id }, (err) => {
-      if(err){
-        res.status(500);
-        responseHandler(req, res, { error: err });
-      }
+  app.delete('/api/users/:id', async (req, res) => {
 
-      res.status(200);
-      responseHandler(req, res, { message: "User deleted."});
+    const id = req.params.id;
+
+    const deleted = await sureThing(User.findOneAndDelete({ _id: id }), {
+      success: "success",
+      rejected: "User was not deleted."
     });
+
+    if(!deleted.ok){
+      res.status(500);
+    }
+
+    res.status(200);
+    responseFinalizer(req, res, deleted);
+
   });
 }
 

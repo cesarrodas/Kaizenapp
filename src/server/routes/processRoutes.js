@@ -1,51 +1,66 @@
-import Process from '../models/processModel'; 
-import { authentication, responseHandler } from './authRoutes';
+import Process from '../models/processModel';
+import { sureThing, responseFinalizer } from '../../helpers'; 
+//import { authentication, responseHandler } from './authRoutes'; // import { authentication, responseHandler } from './authRoutes'; 
 
 export const processRoutes = (app) => {
 
-  app.get('/api/processes/user/:userId', (req, res) => {
+  app.get('/api/processes/user/:userId', async (req, res) => {
     const userId = req.params.userId;
 
-    Process.find({ creator: userId }, (err, processes) => {
-      if ( err ) { 
-        res.status(404);
-        responseHandler(req, res, { message: "Processes not found." });
-      }
-
-      res.status(200);
-      responseHandler(req, res, processes);
+    const processes = await sureThing(Process.find({ creator: userId }).exec(), {
+      success: 'success',
+      rejected: 'The processes were not found.'
     });
+
+    if(!processes.ok) {
+      res.status(404)
+      responseFinalizer(req, res, processes);
+    }
+
+    res.status(200);
+    responseFinalizer(req, res, processes);
+
   });
 
-  app.get('/api/processes/:id', authentication, (req, res) => {
+  app.get('/api/processes/:id', async (req, res) => {
     const id = req.params.id;
 
-    Process.findOne({ _id: id }, (err, process) => {
-      if ( err ) { 
-        res.status(404);
-        responseHandler(req, res, { message: "Process not found." });
-      }
-      
-      res.status(200);
-      responseHandler(req, res, process);
+    const foundProcess = await sureThing(Process.findOne({ _id: id }).exec(), {
+      success: 'success',
+      rejected: 'The process was not found.'
     });
+
+    if(!foundProcess.ok){
+      res.status(404);
+      responseFinalizer(req, res, foundProcess);
+    }
+
+    res.status(200);
+    responseFinalizer(req, res, foundProcess);
+
   });
 
-  app.post('/api/processes/create', (req, res) => {
+  app.post('/api/processes/create', async (req, res) => {
     const { name, creator } = req.body;
 
-    const process = new Process({ name: name, creator: creator });
-    process.save(function (err, process) {
-      if (err) {
-        res.status(500);
-        responseHandler(req, res, { error: err });
-      };
-      res.status(201);
-      responseHandler(req, res, process);
-    });
+    const newProcess = new Process({ name: name, creator: creator });
+
+    const saveProcess = await sureThing(newProcess.save(), {
+      success: 'success',
+      rejected: 'Process failed to save.'
+    }); 
+
+    if(!saveProcess.ok){
+      res.status(500);
+      responseFinalizer(req, res, saveProcess);
+    }
+
+    res.status(200);
+    responseFinalizer(req, res, saveProcess);
+
   });
 
-  app.put('/api/processes/:id', (req, res) => {
+  app.put('/api/processes/:id', async (req, res) => {
     const newProcess = {};
     const id = req.params.id;
 
@@ -53,29 +68,36 @@ export const processRoutes = (app) => {
       newProcess.name = req.body.name;
     }
 
-    Process.findOneAndUpdate({ _id: id }, newProcess, (err, process) => {
-      if(err){
-        res.status(400);
-        responseHandler(req, res, { error: err });
-      }
-
-      res.status(204);
-      responseHandler(req, res, process);
+    const updatedProcess = await sureThing(Process.findOneAndUpdate({ _id: id }, newProcess), {
+      success: 'success',
+      rejected: 'Process failed to update.'
     });
+
+    if(!updatedReplay.ok){
+      res.status(400);
+      responseFinalizer(req, res, updatedProcess);
+    }
+
+    res.status(202);
+    responseFinalizer(req, res, updatedProcess);
+
   });
 
-  app.delete('/api/processes/:id', (req, res) => {
+  app.delete('/api/processes/:id', async (req, res) => {
     const id = req.params.id;
-    
-    Process.findOneAndDelete({ _id: id }, (err) => {
-      if(err){
-        res.status(500);
-        responseHandler(req, res, { error: err });
-      }
 
-      res.status(200);
-      responseHandler(req, res, { message: "Process deleted." });
+    const deleted = await sureThing(Process.findOneAndDelete({ _id: id }), {
+      success: "success",
+      rejected: "Process was not deleted."
     });
+
+    if(!deleted.ok) {
+      res.status(500);
+    }
+
+    res.status(200);
+    responseFinalizer(req, res, deleted);
+
   });
 
 }
