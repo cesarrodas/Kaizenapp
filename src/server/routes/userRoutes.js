@@ -1,4 +1,4 @@
-import { sureThing, responseFinalizer } from '../../helpers';
+import { sureThing, responseFinalizer, filterObject } from '../../helpers';
 import { checkExistance } from '../validators/userValidators';
 
 //import mongoose from 'mongoose';
@@ -17,11 +17,28 @@ export const userRoutes = (app) => {
       rejected: "The user was not found."
     });
 
-    if(response.ok){
-      res.status(200);
+    if(!response.ok){
+      res.status(404);
       responseFinalizer(req, res, response);
     } else {
+      res.status(200);
+      responseFinalizer(req, res, response);
+    }
+  });
+
+  app.get('/api/users/:username', async (req, res) => {
+    const username = req.params.username;
+
+    const response = await sureThing(User.findOne({ username: username }).select('categories _id username email createdAt updatedAt').exec(), {
+      success: "success",
+      rejected: "The user was not found."
+    });
+
+    if(!response.ok){
       res.status(404);
+      responseFinalizer(req, res, response);
+    } else {
+      res.status(200);
       responseFinalizer(req, res, response);
     }
   });
@@ -31,12 +48,12 @@ export const userRoutes = (app) => {
     const { username, email, password } = req.body;
     const newPass = await sureThing(bcrypt.hash(password, saltRounds));
 
-    if (!newPass) {
+    if (!newPass.ok) {
       res.status(500);
       responseFinalizer(req, res, newPass);
     }
 
-    const user = new User({ username: username, email: email, hash: newPass});
+    const user = new User({ username: username, email: email, hash: newPass.result});
 
     const uniqueUsername = await sureThing(checkExistance(username), {
       success: "success",
@@ -49,23 +66,23 @@ export const userRoutes = (app) => {
     }
 
     const response = await sureThing(user.save());
-    if(!response){
+
+    //console.log("USER RESPONSE: ", response.result);
+    const userData = filterObject(["hash", "loginKeys", "__v"], response.result._doc);
+
+    if(!response.ok){
       res.status(500);
       responseFinalizer(req, res, response);
     }
 
     res.status(201);
-    responseFinalizer(req, res, { ok: true, message: "User created." });
+    responseFinalizer(req, res, { ok: true, message: "User created.", user: userData });
 
   });
 
   app.put('/api/users/:id', async (req, res) => {
     let newUser = {};
     const id = req.params.id;
-
-    if(req.body.username){
-      newUser.username = req.body.username;
-    }
 
     if(req.body.password){
       newUser.password = req.body.password;
@@ -75,7 +92,7 @@ export const userRoutes = (app) => {
       newUser.email = req.body.email;
     }
 
-    const updated = await sureThing(User.findOneAndUpdate({ _id: id }, newUser ), {
+    const updated = await sureThing(User.findOneAndUpdate({ _id: id }, newUser, { new: true } ), {
       success: "success",
       rejected: "User update failed."
     });

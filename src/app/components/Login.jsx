@@ -22,7 +22,7 @@ class Login extends React.Component {
 
   componentDidUpdate(prevProps){
     if(prevProps.auth.loggedIn === false && this.props.auth.loggedIn === true){
-      this.props.history.push('/');
+      this.props.history.push('/dashboard');
     }
   }
   
@@ -41,17 +41,13 @@ class Login extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="loginForm" >
         <h2>Log In</h2>
         <form onSubmit={this.handleSubmit}>
-          <label>
-            Username:
-            <input type="text" name="username" onChange={ this.handleChange } />
-          </label>
-          <label>
-            Password:
-            <input type="password" name="password" onChange={ this.handleChange }/>
-          </label>
+          <label>Username:</label><br/>
+          <input type="text" name="username" onChange={ this.handleChange } /><br/>
+          <label>Password:</label><br/>
+          <input type="password" name="password" onChange={ this.handleChange }/><br/>
           <input type="submit" value="Submit" />
         </form>
       </div>

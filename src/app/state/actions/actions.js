@@ -12,6 +12,12 @@ export const REQUEST_REGISTER_USER = 'REQUEST_REGISTER_USER';
 export const PROCESSING_REGISTER_USER = 'PROCESSING_REGISTER_USER';
 export const REGISTRATION_COMPLETE = 'REGISTRATION_COMPLETE';
 export const REGISTRATION_FAILED = 'REGISTRATION_FAILED';
+
+export const CHECK_USER_LOGGED = 'CHECK_USER_LOGGED';
+
+export const REQUEST_USER_LOGOUT = 'REQUEST_USER_LOGOUT';
+export const USER_LOGOUT_COMPLETE = 'USER_LOGOUT_COMPLETE';
+export const USER_LOGOUT_FAILED = 'USER_LOGOUT_FAILED';
 /*
  * other constants
  */
@@ -63,3 +69,18 @@ export const registrationFailed = () => ({
   type: REGISTRATION_FAILED
 });
 
+export const checkUserLogged = () => ({
+  type: CHECK_USER_LOGGED
+});
+
+export const requestUserLogout = () => ({
+  type: REQUEST_USER_LOGOUT
+});
+
+export const userLogoutComplete = () => ({
+  type: USER_LOGOUT_COMPLETE
+});
+
+export const userLogoutFailed = () => ({
+  type: USER_LOGOUT_FAILED
+});

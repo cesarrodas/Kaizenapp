@@ -10,6 +10,17 @@ export const responseHandler = (req, res, data) => {
   }
 }
 
+export const filterObject = (keysToRemove, object) => {
+	let newObject = {};
+  	let keys = Object.keys(object);
+  	for(let i = 0; i < keys.length; i++){
+    	if(keysToRemove.indexOf(keys[i]) == -1){
+        	newObject[keys[i]] = object[keys[i]];		                             
+        }
+    }
+	return newObject;
+}
+
 export const responseFinalizer = (req, res, data) => {
   if(req.token){
     data.token = req.token;

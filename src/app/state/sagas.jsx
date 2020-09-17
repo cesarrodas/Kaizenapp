@@ -1,40 +1,27 @@
 import { put, take } from 'redux-saga/effects';
 
+// function HomeButton() {
+//   let history = useHistory();
+
 import * as actions from './actions/actions';
 import axios from 'axios';
 
-const url = "http://localhost:3000";
-
-//const delay = (ms) => new Promise(res => setTimeout(res, ms));
-
-// export function* incrementAsync() {
-//   yield delay(1000)
-//   yield put({ type: 'INCREMENT' })
-// }
-
-// // Our watcher Saga: spawn a new incrementAsync task on each INCREMENT_ASYNC
-// export function* watchIncrementAsync() {
-//   yield takeEvery('INCREMENT_ASYNC', incrementAsync)
-// }
+const url = "https://localhost:3000";
 
 export function* userRegistrationSaga(){
   while(true){
     const { username, email, password } = yield take(actions.REQUEST_REGISTER_USER);
 
     yield put(actions.processRegisterUser());
-    try {
-      const { data } = yield axios.post(url + '/api/users/create', { username, password, email });
-
-      if(!data){
-        yield put(actions.registrationFailed());
-        throw new Error("Data not retrieved");
-      }
-
-      //console.log("user Created! ", data);
+    const { data } = yield axios.post(url + '/api/users/create', { username, password, email });
+    
+    if(!data.ok){
+      yield put(actions.registrationFailed());
+    } else {
       yield put(actions.registered());
-    } catch (e) {
-      yield put(actions.registrationFailed({ error: e }));
+      yield put(actions.requestAuthenticateUser(username, password));
     }
+    //{ error: e }
   }
 }
 
@@ -42,20 +29,46 @@ export function* userAuthenticationSaga(){
   while(true){
     const { username, password } = yield take(actions.REQUEST_AUTHENTICATE_USER);
     yield put(actions.authenticating());
-    try {
-      const { data } = yield axios.post(url + '/api/authenticate', {username, password}, { withCredentials: true })
-      if(!data){
-        throw new Error("User not found.");
-      }
-      
-      yield put(actions.authenticated(data.user));
-      console.log("Authenticated!", data);
+    
+    const { data } = yield axios.post(url + '/api/authenticate', {username, password}, { withCredentials: true })
+    
+    console.log("login data: ", data);
 
-    } catch (e) {
+    if(!data.ok){
       yield put(actions.notAuthenticated());
+    } else {
+      yield put(actions.authenticated(data.user));
     }
   }
 }
+
+export function* isUserLoggedIn(){
+  while ( true ) {
+    yield take(actions.CHECK_USER_LOGGED);
+    const { data } = yield axios.get(url + '/api/isLogged', { withCredentials: true });
+
+    console.log("DATA from is logged: ", data);
+    if(data.ok){
+      yield put(actions.authenticated(data.user));
+    }
+
+  }
+}
+
+export function* logOut(){
+  while ( true ) {
+    yield take(actions.REQUEST_USER_LOGOUT);
+    const { data } = yield axios.get(url + '/api/logout', { withCredentials: true });
+
+    if(data.ok){
+      yield put(actions.userLogoutComplete());
+    } else {
+      yield put(actions.userLogoutFailed());
+    }
+  }
+
+}
+
 
 // export default function* rootSaga() {
 //   yield all([

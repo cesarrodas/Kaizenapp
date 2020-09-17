@@ -73,7 +73,7 @@ export const processRoutes = (app) => {
       rejected: 'Process failed to update.'
     });
 
-    if(!updatedReplay.ok){
+    if(!updatedProcess.ok){
       res.status(400);
       responseFinalizer(req, res, updatedProcess);
     }

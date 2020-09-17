@@ -1,4 +1,5 @@
 const path = require("path");
+const fs = require('fs');
 
 module.exports = {
   mode: "development",
@@ -12,6 +13,12 @@ module.exports = {
     extensions: ['.js', '.jsx']
   },
   devServer: {
+    http2: true,
+    https: {
+      key: fs.readFileSync('./server.key'),
+      cert: fs.readFileSync('./server.crt'),
+      ca: fs.readFileSync('./rootSSL.pem')
+    },
     historyApiFallback: true,
     headers: {
       "Access-Control-Allow-Origin": "*",

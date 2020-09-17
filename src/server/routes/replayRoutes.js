@@ -104,6 +104,5 @@ export const replayRoutes = (app) => {
 
     res.status(200);
     responseFinalizer(req, res, deleted);
-
   });
 }

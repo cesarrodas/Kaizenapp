@@ -1,2 +1,5 @@
 node_modules
 .env
+rootSSL.pem
+server.crt
+server.key
