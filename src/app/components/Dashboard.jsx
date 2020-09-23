@@ -1,5 +1,5 @@
 import React from 'react';
-import Modal from './Modal';
+import ProcessModal from './ProcessModal';
 
 class Dashboard extends React.Component {
 
@@ -8,12 +8,19 @@ class Dashboard extends React.Component {
     this.state = {
       showProccessModal: false
     }
-    this.addProcessClick = this.addProcessClick.bind(this);
-  }
 
+    this.addProcessClick = this.addProcessClick.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+  }
   addProcessClick(){
     this.setState({
       showProccessModal: true
+    });
+  }
+
+  closeModal(){
+    this.setState({
+      showProccessModal: false
     });
   }
 
@@ -24,11 +31,7 @@ class Dashboard extends React.Component {
         <button id="addProcess" onClick={this.addProcessClick}>New</button>
         {
           this.state.showProccessModal ? (
-            <Modal>
-              <h1>Modal</h1>
-              <button>Close</button>
-              <button>Submit</button>  
-            </Modal>
+            <ProcessModal closeModal={this.closeModal}/>
           ) : null
         }
       </div>

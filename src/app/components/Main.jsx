@@ -62,9 +62,9 @@ class Main extends React.Component {
       <main>
         <Navigation auth={this.props.auth} logout={this.props.requestUserLogout} />
         <Switch>
-          <Route path="/" exact component={Home} />
-          <Route path="/login" component={Login} />
-          <Route path="/register" component={Register} />
+          <Route path="/" exact component={() => <Home auth={this.props.auth} />} />
+          <Route path="/login" component={() => <Login auth={this.props.auth} />} />
+          <Route path="/register" component={() => <Register auth={this.props.auth} />} />
           <PrivateRoute path="/dashboard">
                 <Dashboard />
           </PrivateRoute>

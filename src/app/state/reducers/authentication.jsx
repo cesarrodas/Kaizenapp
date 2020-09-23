@@ -26,6 +26,20 @@ const authenticationReducer = (state = defaultState, action) => {
         userData: null,
         loading: false
       };
+    case actions.REQUEST_USER_LOGOUT:
+      return Object.assign({} , state, {
+        loading: true
+      });
+    case actions.USER_LOGOUT_COMPLETE:
+      return {
+        loggedIn: false,
+        userData: null,
+        loading: false
+      }
+    case actions.USER_LOGOUT_FAILED:
+      return Object.assign({} , state, {
+        loading: false
+      });
     default:
       return state
   }

@@ -23,7 +23,7 @@ import Main from './components/Main';
 ReactDOM.render(
   <BrowserRouter>
     <Provider store={store}>
-      <Main />
+      <Main  />
     </Provider>
   </BrowserRouter>
   , document.getElementById('app'));

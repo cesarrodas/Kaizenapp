@@ -1,6 +1,8 @@
 import React from 'react';
 
+import { compose } from 'redux';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import { requestRegisterUser } from '../state/actions/actions';
 
 class Register extends React.Component {
@@ -18,8 +20,8 @@ class Register extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  componentDidUpdate(prevProps){
-    if(prevProps.auth.loggedIn === false && this.props.auth.loggedIn === true){
+  componentDidMount(){
+    if(this.props.auth.loggedIn){
       this.props.history.push('/dashboard');
     }
   }
@@ -54,12 +56,9 @@ class Register extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    auth: state.auth
-  }
-}
-
 const mapDispatchToProps = { requestRegisterUser }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Register);
+export default compose(
+  withRouter,
+  connect(null, mapDispatchToProps)
+)(Register);

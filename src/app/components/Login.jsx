@@ -20,8 +20,8 @@ class Login extends React.Component {
 
   }
 
-  componentDidUpdate(prevProps){
-    if(prevProps.auth.loggedIn === false && this.props.auth.loggedIn === true){
+  componentDidMount(){
+    if(this.props.auth.loggedIn){
       this.props.history.push('/dashboard');
     }
   }
@@ -55,15 +55,9 @@ class Login extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    auth: state.auth
-  }
-}
-
 const mapDispatchToProps = { requestAuthenticateUser }
 
 export default compose(
   withRouter,
-  connect(mapStateToProps, mapDispatchToProps)
+  connect(null, mapDispatchToProps)
 )(Login);

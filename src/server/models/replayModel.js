@@ -2,7 +2,10 @@ import mongoose from 'mongoose';
 
 const replaySchema = new mongoose.Schema({
   name: String,
-  detail: String,
+  hypothesis: String,
+  experiment: String,
+  analysis: String,
+  conclusion: String,
   process: String,
   creator: String,
   tags: []
