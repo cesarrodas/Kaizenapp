@@ -1,11 +1,11 @@
 import React from 'react';
 
 class TagInput extends React.Component {
-  constructor(){
-    super();
+  constructor(props){
+    super(props);
 
     this.state = {
-      tags: [],
+      tags: this.props.tags,
       tagInput: ""
     };
     this.addTag = this.addTag.bind(this);
@@ -15,11 +15,13 @@ class TagInput extends React.Component {
 
   addTag(event){
     if(event.target.value != ""){
-      let tag = String(event.target.value).trim();
+      let tag = String(event.target.value).trim().replace(" ", "");
       if(this.state.tags.indexOf(tag) == -1){
         this.setState({
           tags: [...this.state.tags, tag],
           tagInput: ""
+        }, () => {
+          this.props.onChange(this.state.tags);
         });
       } else {
         this.setState({
@@ -35,6 +37,8 @@ class TagInput extends React.Component {
     } else if (event.key === "Backspace" && this.state.tagInput === ""){
       this.setState({
         tags: this.state.tags.slice(0, -1)
+      }, () => {
+        this.props.onChange(this.state.tags);
       });
     }
   }

@@ -4,6 +4,9 @@ import { createLogger } from 'redux-logger';
 // applyMiddleware from redux
 import counter from './reducers/counter';
 import authenticationReducer from './reducers/authentication';
+import processFormReducer from './reducers/processForm';
+import processesReducer from './reducers/processes';
+import appStatusReducer from './reducers/appStatus';
 
 import * as sagas from './sagas';
 
@@ -14,7 +17,10 @@ const sagaMiddleware = createSagaMiddleware();
 
 const store = createStore(combineReducers({
   counter: counter,
-  auth: authenticationReducer
+  auth: authenticationReducer,
+  processForm: processFormReducer,
+  data: processesReducer,
+  appStatus: appStatusReducer
 }), applyMiddleware(createLogger() ,sagaMiddleware));
 
 for(let saga in sagas){

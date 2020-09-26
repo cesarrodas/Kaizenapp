@@ -17,7 +17,7 @@ const authenticationReducer = (state = defaultState, action) => {
     case actions.AUTHENTICATED:
       return {
         loggedIn: true,
-        userData: action.payload,
+        userData: action.payload.user,
         loading: false
       }
     case actions.NOT_AUTHENTICATED:

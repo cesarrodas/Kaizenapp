@@ -49,7 +49,7 @@ export function* isUserLoggedIn(){
 
     console.log("DATA from is logged: ", data);
     if(data.ok){
-      yield put(actions.authenticated(data.user));
+      yield put(actions.authenticated(data.result));
     }
 
   }
@@ -69,10 +69,17 @@ export function* logOut(){
 
 }
 
+export function* createProcess(){
+  while(true){
+    const processData = yield take(actions.REQUEST_PROCESS_CREATION);
+    //console.log("process SUBMITTED: ", processData);
 
-// export default function* rootSaga() {
-//   yield all([
-//     watchIncrementAsync(),
-//     userAuthenticationSaga()
-//   ])
-// }
+    const { data } = yield axios.post(url + '/api/processes/create', processData.payload, { withCredentials: true });
+    
+    if(data.ok){
+      yield put(actions.processCreated());
+    } else {
+      yield put(actions.processCreationFailed());
+    }
+  }
+}

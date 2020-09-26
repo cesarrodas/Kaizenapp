@@ -1,9 +1,8 @@
 import mongoose from 'mongoose';
 
 const processSchema = new mongoose.Schema({
-  name: String,
+  process: String,
   category: String,
-  pages: [],
   tags: [],
   creator: String
 },

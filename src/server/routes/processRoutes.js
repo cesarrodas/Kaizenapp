@@ -41,14 +41,16 @@ export const processRoutes = (app) => {
   });
 
   app.post('/api/processes/create', async (req, res) => {
-    const { name, creator } = req.body;
+    const { process, creator, category, tags } = req.body;
 
-    const newProcess = new Process({ name: name, creator: creator });
+    console.log("new process data: ", process, creator, category, tags);
+
+    const newProcess = new Process({ process: process, creator: creator, category: category, tags: tags });
 
     const saveProcess = await sureThing(newProcess.save(), {
       success: 'success',
       rejected: 'Process failed to save.'
-    }); 
+    });
 
     if(!saveProcess.ok){
       res.status(500);
@@ -64,9 +66,18 @@ export const processRoutes = (app) => {
     const newProcess = {};
     const id = req.params.id;
 
-    if(req.body.name){
-      newProcess.name = req.body.name;
+    if(req.body.process){
+      newProcess.process = req.body.process;
     }
+
+    if(req.body.category){
+      newProcess.category = req.body.category;
+    }
+
+    if(req.body.tags){
+      newProcess.tags = req.body.tags;
+    }
+
 
     const updatedProcess = await sureThing(Process.findOneAndUpdate({ _id: id }, newProcess), {
       success: 'success',

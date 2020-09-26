@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Route, Switch, Redirect } from 'react-router-dom';
-import { checkUserLogged, requestUserLogout } from '../state/actions/actions';
+import { checkUserLogged, requestUserLogout, showProcessModal, showProcessEditModal } from '../state/actions/actions';
 import { connect } from 'react-redux';
 
 import Navigation from './Navigation';
@@ -66,7 +66,12 @@ class Main extends React.Component {
           <Route path="/login" component={() => <Login auth={this.props.auth} />} />
           <Route path="/register" component={() => <Register auth={this.props.auth} />} />
           <PrivateRoute path="/dashboard">
-                <Dashboard />
+            <Dashboard 
+              data={this.props.data} 
+              appStatus={this.props.appStatus}
+              showProcessModal={this.props.showProcessModal}
+              showProcessEditModal={this.props.showProcessEditModal}
+            />
           </PrivateRoute>
           <Route path="*" component={NotFound}></Route>
         </Switch>
@@ -77,11 +82,18 @@ class Main extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    auth: state.auth
+    auth: state.auth,
+    data: state.data,
+    appStatus: state.appStatus
   }
 }
 
-const mapDispatchToProps = { checkUserLogged, requestUserLogout }
+const mapDispatchToProps = {
+  checkUserLogged, 
+  requestUserLogout, 
+  showProcessModal, 
+  showProcessEditModal 
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main);
 
