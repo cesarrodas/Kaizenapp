@@ -38,14 +38,16 @@ export function* userAuthenticationSaga(){
       yield put(actions.notAuthenticated());
     } else {
       yield put(actions.authenticated(data.user));
+      yield put(actions.getUserData());
     }
   }
 }
 
-export function* isUserLoggedIn(){
+// this needs to be renamed in order to update all data
+export function* getUserData(){
   while ( true ) {
-    yield take(actions.CHECK_USER_LOGGED);
-    const { data } = yield axios.get(url + '/api/isLogged', { withCredentials: true });
+    yield take(actions.GET_USER_DATA);
+    const { data } = yield axios.get(url + '/api/getUserData', { withCredentials: true });
 
     console.log("DATA from is logged: ", data);
     if(data.ok){
@@ -78,8 +80,52 @@ export function* createProcess(){
     
     if(data.ok){
       yield put(actions.processCreated());
+      yield put(actions.getUserData());
     } else {
       yield put(actions.processCreationFailed());
     }
   }
 }
+
+export function* updateProcess(){
+  while(true){
+    const processData = yield take(actions.REQUEST_PROCESS_UPDATE);
+    console.log("processData", processData);
+    const updateData = {};
+    updateData.process = processData.payload.process;
+    updateData.category = processData.payload.category;
+    updateData.tags = processData.payload.tags;
+    console.log("update data", updateData);
+    console.log("update id ", processData.payload.id);
+
+    const { data } = yield axios.put(url + `/api/processes/${processData.payload.id}`, updateData, { withCredentials: true })
+
+    if(data.ok){
+      console.log("great update to data");
+    } else {
+      console.log("update failed");
+    }
+    // what can I do to pass the correct data to the form. 
+    //const { data } 
+  }
+}
+
+export function* deleteProcess(){
+  while(true){
+    const request = yield take(actions.REQUEST_PROCESS_DELETE);
+
+    //console.log("data at delete: ", processId);
+    const deleteUrl = url + `/api/processes/${request.payload}`;
+    console.log("DELETE URL: ", deleteUrl);
+
+    const { data } = yield axios.delete(deleteUrl, { withCredentials: true });
+
+    if(data.ok){
+      yield put(actions.processDeleteComplete());
+      yield put(actions.getUserData());
+    } else {
+      yield put(actions.processDeleteFailed());
+    }
+  }
+}
+

@@ -44,7 +44,7 @@ export const authRoutes = ( app ) => {
     }
   });
 
-  app.get('/api/isLogged', async (req, res) => {
+  app.get('/api/getUserData', async (req, res) => {
 
     if(req.signedCookies.access_token){
       const cookie = req.signedCookies.access_token;

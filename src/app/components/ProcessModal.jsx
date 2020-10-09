@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { updateProcessForm, requestProcessCreation } from '../state/actions/actions';
+import { updateProcessForm, requestProcessCreation, requestProcessUpdate } from '../state/actions/actions';
 import Modal from './Modal';
 import { CSSTransition } from 'react-transition-group';
 import TagInput from './TagInput';
@@ -19,7 +19,9 @@ class ProcessModal extends React.Component {
     this.closeModal = this.closeModal.bind(this);
     this.onChange = this.onChange.bind(this);
     this.changeTags = this.changeTags.bind(this);
-    this.submitProcess = this.submitProcess.bind(this);
+    this.modalContent = this.modalContent.bind(this);
+    this.createProcess = this.createProcess.bind(this);
+    this.updateProcess = this.updateProcess.bind(this);
   }
 
   closeModal(){
@@ -58,30 +60,33 @@ class ProcessModal extends React.Component {
     });
   }
 
-  submitProcess(){
+  createProcess(){
     //console.log("process submission: ", this.state);
     this.props.requestProcessCreation(this.props.processForm);
   }
 
-  render (){
-    let submit = null;
-    if(this.props.edit){
-      submit = (<button type="submit" onClick={this.submitProcess}>Update</button>);
+  updateProcess(){
+    this.props.requestProcessUpdate(this.props.processForm);
+  }
+
+  modalContent(){
+    if(this.props.delete){
+      return (
+        <div className="modal processModal">
+          <h2>Delete</h2>
+          <p>Are you sure? </p>
+          <button onClick={this.closeModal}>Cancel</button>
+          <button onClick={this.props.deleteProcess}>Delete</button>
+        </div>
+      )
     } else {
-      submit = (<button type="submit" onClick={this.submitProcess}>Submit</button>);
-    }
-
-    return (
-      <Modal>
-        <CSSTransition 
-          in={this.state.modalBackgroundAnimation} 
-          classNames="modal-bg" 
-          timeout={{ appear: 300, exit: 300 }}
-          appear={true}
-          unmountOnExit >
-          <div className="modal-bg"></div>
-        </CSSTransition>
-
+      let submit = null;
+      if(this.props.edit){
+        submit = (<button type="submit" onClick={this.updateProcess}>Update</button>);
+      } else {
+        submit = (<button type="submit" onClick={this.createProcess}>Submit</button>);
+      }
+      return (
         <div className="modal processModal">
           <h2>Process</h2>
           <label htmlFor="processName"><strong>Process</strong></label><br/>
@@ -96,15 +101,40 @@ class ProcessModal extends React.Component {
           <br/>
           <label htmlFor="tags"><strong>Tags</strong></label>
           <TagInput tags={this.state.tags} onChange={this.changeTags} /><br/>
-          <button onClick={this.closeModal}>Close</button>
+          <button onClick={this.closeModal}>Cancel</button>
           {submit}
         </div>
+      );
+    }
+  }
+
+  render (){
+    let modalContent = this.modalContent();  
+
+    return (
+      <Modal>
+        <CSSTransition 
+          in={this.state.modalBackgroundAnimation} 
+          classNames="modal-bg" 
+          timeout={{ appear: 300, exit: 300 }}
+          appear={true}
+          unmountOnExit >
+          <div className="modal-bg"></div>
+        </CSSTransition>
+
+        <CSSTransition
+          in={this.state.modalAnimation}
+          classNames="modal"
+          timeout={{ appear: 300, exit: 300 }}
+          appear={true}
+          unmountOnExit
+        >
+          {modalContent}
+        </CSSTransition>
       </Modal>
     );
   }
 }
-
-//export default ProcessModal;
 
 const mapStateToProps = (state) => {
   return {
@@ -113,6 +143,6 @@ const mapStateToProps = (state) => {
   }
 }
 
-const mapDispatchToProps = { updateProcessForm, requestProcessCreation }
+const mapDispatchToProps = { updateProcessForm, requestProcessCreation, requestProcessUpdate }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProcessModal);

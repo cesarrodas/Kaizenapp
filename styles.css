@@ -7,7 +7,7 @@ body {
   padding: 0;
   font-size: 16;
   font-family: Helvetica;
-  background-color: #DFF2F2;
+  background-color: #BFBCAA;
 }
 
 main {
@@ -139,7 +139,39 @@ nav ul li:hover {
   z-index: 2;
   position: fixed;
   left: calc(50% - 100px);
-  top: calc(50% - 100px);
+  /* top: calc(50% - 100px); */
+  top: 0;
+}
+
+.modal-appear {
+  opacity: 0.1;
+}
+
+.modal-appear-active {
+  opacity: 1;
+  top: calc(50% - 200px);
+  transition: opacity 300ms, top 300ms;
+}
+
+.modal-appear-done {
+  top: calc(50% - 200px);
+  opacity: 1;
+  transition: none;
+}
+
+.modal-exit {
+  top: calc(50% - 200px);
+  opacity: 1;
+}
+.modal-exit-active {
+  opacity: 0;
+  top: 0;
+  transition: opacity 300ms, top 300ms;
+}
+.modal-exit-done {
+  opacity: 0;
+  top: 0;
+  transition: none;
 }
 
 /***********************************/
@@ -189,6 +221,17 @@ nav ul li:hover {
 /* Dashboard Component         */
 /*******************************/
 
+#addProcess {
+  position: fixed;
+  right: 60px;
+  bottom: 40px;
+  width: 120px;
+  height: 60px;
+  border-radius: 20px;
+  box-shadow: #0b4d4d 3px 3px;
+  background-color: #d9d162;
+}
+
 /*******************************/
 /* Process Component           */
 /*******************************/
@@ -196,14 +239,14 @@ nav ul li:hover {
 .processContainer {
   width: 100%;
   height: 80px;
-  background-color: #798C35;
+  background-color: #a6a26f;
   border-radius: 20px;
 }
 
 .processEditButton {
-  background-color: #92BF30;
+  background-color: #bfbcaa;
 }
 
 .processDeleteButton {
-  background-color: red;
+  background-color: #bfbcaa;
 }

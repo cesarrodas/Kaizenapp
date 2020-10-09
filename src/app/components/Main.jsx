@@ -1,7 +1,15 @@
 import React from 'react';
-
 import { Route, Switch, Redirect } from 'react-router-dom';
-import { checkUserLogged, requestUserLogout, showProcessModal, showProcessEditModal } from '../state/actions/actions';
+import { 
+  getUserData, 
+  requestUserLogout, 
+  showProcessModal, 
+  showProcessEditModal, 
+  updateProcessForm,
+  showProcessDeleteModal,
+  updateProcessDeletable,
+  requestProcessDelete
+} from '../state/actions/actions';
 import { connect } from 'react-redux';
 
 import Navigation from './Navigation';
@@ -34,27 +42,12 @@ function PrivateRoute({ children, ...rest }) {
   );
 }
 
-// export const Main = () => (
-//   <main>
-//     <Navigation />
-//     <Switch>
-//       <Route path="/" exact component={Home} />
-//       <Route path="/login" component={Login} />
-//       <Route path="/register" component={Register} />
-//       <PrivateRoute path="/dashboard">
-//             <Dashboard />
-//       </PrivateRoute>
-//       <Route path="*" component={NotFound}></Route>
-//     </Switch>
-//   </main>
-// );
-
 class Main extends React.Component {
   
   componentDidMount(){
     // something.
     console.log("hello");
-    this.props.checkUserLogged();
+    this.props.getUserData();
   }
 
   render() {
@@ -71,6 +64,10 @@ class Main extends React.Component {
               appStatus={this.props.appStatus}
               showProcessModal={this.props.showProcessModal}
               showProcessEditModal={this.props.showProcessEditModal}
+              showProcessDeleteModal={this.props.showProcessDeleteModal}
+              updateProcessForm={this.props.updateProcessForm}
+              updateProcessDeletable={this.props.updateProcessDeletable}
+              requestProcessDelete={this.props.requestProcessDelete}
             />
           </PrivateRoute>
           <Route path="*" component={NotFound}></Route>
@@ -89,10 +86,14 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = {
-  checkUserLogged, 
+  getUserData, 
   requestUserLogout, 
   showProcessModal, 
-  showProcessEditModal 
+  showProcessEditModal,
+  showProcessDeleteModal,
+  updateProcessForm,
+  updateProcessDeletable,
+  requestProcessDelete
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main);

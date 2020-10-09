@@ -1,6 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { requestProcessDelete, requestProcessEdit, updateProcessForm } from '../state/actions/actions';
 
 class Process extends React.Component {
   constructor(){
@@ -11,11 +9,15 @@ class Process extends React.Component {
 
   deleteProcess(){
     //console.log("delete process");
-    this.props.requestProcessDelete(this.props.data._id);
+    //this.props.requestProcessDelete(this.props.data._id);
+    //console.log("deleted if by magic");
+    this.props.updateProcessDeletable(this.props.data._id);
+    this.props.openDeleteProcessModal();
   }
 
   updateProcess(){
     //console.log("update process");
+    console.log("editing data before modal: ", this.props.data);
     this.props.updateProcessForm(this.props.data);
     //this.props.requestProcessEdit(this.props.data);
     this.props.openEditModal();
@@ -37,6 +39,4 @@ class Process extends React.Component {
   }
 }
 
-const mapDispatchToProps = { requestProcessDelete, requestProcessEdit, updateProcessForm }
-
-export default connect(null, mapDispatchToProps)(Process);
+export default Process;

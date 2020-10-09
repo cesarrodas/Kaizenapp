@@ -13,6 +13,7 @@ export const PROCESSING_REGISTER_USER = 'PROCESSING_REGISTER_USER';
 export const REGISTRATION_COMPLETE = 'REGISTRATION_COMPLETE';
 export const REGISTRATION_FAILED = 'REGISTRATION_FAILED';
 
+export const GET_USER_DATA = 'GET_USER_DATA';
 export const CHECK_USER_LOGGED = 'CHECK_USER_LOGGED';
 
 export const REQUEST_USER_LOGOUT = 'REQUEST_USER_LOGOUT';
@@ -25,11 +26,17 @@ export const REQUEST_PROCESS_CREATION = 'REQUEST_PROCESS_CREATION';
 export const PROCESS_CREATED = 'PROCESS_CREATED';
 export const PROCESS_CREATION_FAILED = 'PROCESS_CREATION_FAILED';
 
-export const REQUEST_PROCESS_EDIT = 'REQUEST_PROCESS_EDIT';
+//export const REQUEST_PROCESS_EDIT = 'REQUEST_PROCESS_EDIT';
+export const REQUEST_PROCESS_UPDATE = 'REQUEST_PROCESS_UPDATE';
 export const REQUEST_PROCESS_DELETE = 'REQUEST_PROCESS_DELETE';
 
 export const SHOW_PROCESS_MODAL = 'SHOW_PROCESS_MODAL';
 export const SHOW_PROCESS_EDIT_MODAL = 'SHOW_PROCESS_EDIT_MODAL';
+export const SHOW_PROCESS_DELETE_MODAL = 'SHOW_PROCESS_DELETE_MODAL';
+export const UPDATE_PROCESS_DELETABLE = 'UPDATE_PROCESS_DELETABLE';
+
+export const PROCESS_DELETE_COMPLETE = 'PROCESS_DELETE_COMPLETE';
+export const PROCESS_DELETE_FAILED = 'PROCESS_DELETE_FAILED';
 /*
  * other constants
  */
@@ -81,6 +88,10 @@ export const registrationFailed = () => ({
   type: REGISTRATION_FAILED
 });
 
+export const getUserData = () => ({
+  type: GET_USER_DATA
+});
+
 export const checkUserLogged = () => ({
   type: CHECK_USER_LOGGED
 });
@@ -115,8 +126,13 @@ export const processCreationFailed = () => ({
   type: PROCESS_CREATION_FAILED
 });
 
-export const requestProcessEdit = (payload) => ({
-  type: REQUEST_PROCESS_EDIT,
+// export const requestProcessEdit = (payload) => ({
+//   type: REQUEST_PROCESS_EDIT,
+//   payload: payload
+// });
+
+export const requestProcessUpdate = (payload) => ({
+  type: REQUEST_PROCESS_UPDATE,
   payload: payload
 });
 
@@ -134,3 +150,22 @@ export const showProcessEditModal = (bool) => ({
   type: SHOW_PROCESS_EDIT_MODAL,
   payload: bool
 });
+
+export const showProcessDeleteModal = (bool) => ({
+  type: SHOW_PROCESS_DELETE_MODAL,
+  payload: bool
+});
+
+export const updateProcessDeletable = (id) => ({
+  type: UPDATE_PROCESS_DELETABLE,
+  payload: id
+});
+
+export const processDeleteComplete = () => ({
+  type: PROCESS_DELETE_COMPLETE
+});
+
+export const processDeleteFailed = () => ({
+  type: PROCESS_DELETE_FAILED
+});
+
