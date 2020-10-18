@@ -2,13 +2,8 @@ import React from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { 
   getUserData, 
-  requestUserLogout, 
-  showProcessModal, 
-  showProcessEditModal, 
-  updateProcessForm,
-  showProcessDeleteModal,
-  updateProcessDeletable,
-  requestProcessDelete
+  requestUserLogout,
+  updateReplayPage
 } from '../state/actions/actions';
 import { connect } from 'react-redux';
 
@@ -17,6 +12,7 @@ import Home from './Home';
 import Login from './Login';
 import Register from './Register';
 import Dashboard from './Dashboard';
+import Replay from './Replay';
 
 import NotFound from './NotFound';
 
@@ -45,12 +41,11 @@ function PrivateRoute({ children, ...rest }) {
 class Main extends React.Component {
   
   componentDidMount(){
-    // something.
-    console.log("hello");
     this.props.getUserData();
   }
 
   render() {
+
     return (
       <main>
         <Navigation auth={this.props.auth} logout={this.props.requestUserLogout} />
@@ -60,14 +55,15 @@ class Main extends React.Component {
           <Route path="/register" component={() => <Register auth={this.props.auth} />} />
           <PrivateRoute path="/dashboard">
             <Dashboard 
-              data={this.props.data} 
-              appStatus={this.props.appStatus}
-              showProcessModal={this.props.showProcessModal}
-              showProcessEditModal={this.props.showProcessEditModal}
-              showProcessDeleteModal={this.props.showProcessDeleteModal}
-              updateProcessForm={this.props.updateProcessForm}
-              updateProcessDeletable={this.props.updateProcessDeletable}
-              requestProcessDelete={this.props.requestProcessDelete}
+              data={this.props.data}
+              processModal={this.props.processModal}
+            />
+          </PrivateRoute>
+          <PrivateRoute path="/replays">
+            <Replay
+              replayPage={this.props.replayPage} 
+              replays={this.props.replays}
+              updateReplayPage={this.props.updateReplayPage}
             />
           </PrivateRoute>
           <Route path="*" component={NotFound}></Route>
@@ -81,19 +77,16 @@ const mapStateToProps = (state) => {
   return {
     auth: state.auth,
     data: state.data,
-    appStatus: state.appStatus
+    processModal: state.processModal,
+    replayPage: state.replayPage,
+    replays: state.replays
   }
 }
 
 const mapDispatchToProps = {
-  getUserData, 
-  requestUserLogout, 
-  showProcessModal, 
-  showProcessEditModal,
-  showProcessDeleteModal,
-  updateProcessForm,
-  updateProcessDeletable,
-  requestProcessDelete
+  getUserData,
+  updateReplayPage,
+  requestUserLogout
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main);

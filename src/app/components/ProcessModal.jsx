@@ -1,7 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { updateProcessForm, requestProcessCreation, requestProcessUpdate } from '../state/actions/actions';
+import { updateProcessForm, requestProcessCreation, requestProcessUpdate, closeProcessModal } from '../state/actions/actions';
 import Modal from './Modal';
+import { modes } from '../state/reducers/processModal';
 import { CSSTransition } from 'react-transition-group';
 import TagInput from './TagInput';
 
@@ -12,11 +13,8 @@ class ProcessModal extends React.Component {
     this.state = {
       modalBackgroundAnimation: true,
       modalAnimation: true,
-      processName: this.props.processForm.process,
-      processCategory: this.props.processForm.category,
-      tags: this.props.processForm.tags
     }
-    this.closeModal = this.closeModal.bind(this);
+    this.closeModalAnimation = this.closeModalAnimation.bind(this);
     this.onChange = this.onChange.bind(this);
     this.changeTags = this.changeTags.bind(this);
     this.modalContent = this.modalContent.bind(this);
@@ -24,44 +22,39 @@ class ProcessModal extends React.Component {
     this.updateProcess = this.updateProcess.bind(this);
   }
 
-  closeModal(){
+  componentDidUpdate() {
+    if(this.props.processModal.animatingClose){
+      this.closeModalAnimation();
+    }
+  }
+
+  closeModalAnimation(){
     this.setState({
       modalBackgroundAnimation: false,
       modalAnimation: false
     });
     setTimeout(() => {
-      this.props.closeModal()
+      this.props.closeProcessModal();
     }, 300);
   }
 
   onChange(event){
-    this.setState({
+
+    this.props.updateProcessForm({
       [event.target.name]: event.target.value
-    }, () => {
-      this.props.updateProcessForm({
-        process: this.state.processName,
-        category: this.state.processCategory,
-        tags: this.state.tags,
-        creator: this.props.auth.userData._id
-      });
     });
   }
 
   changeTags(tags){
-    this.setState({
-      tags: tags
-    }, () => {
-      this.props.updateProcessForm({
-        process: this.state.processName,
-        category: this.state.processCategory,
-        tags: this.state.tags,
-        creator: this.props.auth.userData._id
-      });
+    this.props.updateProcessForm({
+      process: this.state.processName,
+      category: this.state.processCategory,
+      tags: tags,
+      creator: this.props.auth.userData._id
     });
   }
 
   createProcess(){
-    //console.log("process submission: ", this.state);
     this.props.requestProcessCreation(this.props.processForm);
   }
 
@@ -70,18 +63,19 @@ class ProcessModal extends React.Component {
   }
 
   modalContent(){
-    if(this.props.delete){
+    console.log("modal Content", this.props.processModal);
+    if(this.props.processModal.mode == modes.DELETE){
       return (
         <div className="modal processModal">
           <h2>Delete</h2>
           <p>Are you sure? </p>
-          <button onClick={this.closeModal}>Cancel</button>
+          <button onClick={this.closeModalAnimation}>Cancel</button>
           <button onClick={this.props.deleteProcess}>Delete</button>
         </div>
       )
     } else {
       let submit = null;
-      if(this.props.edit){
+      if(this.props.processModal.mode == modes.UPDATE){
         submit = (<button type="submit" onClick={this.updateProcess}>Update</button>);
       } else {
         submit = (<button type="submit" onClick={this.createProcess}>Submit</button>);
@@ -90,9 +84,9 @@ class ProcessModal extends React.Component {
         <div className="modal processModal">
           <h2>Process</h2>
           <label htmlFor="processName"><strong>Process</strong></label><br/>
-          <input name="processName" value={this.state.processName} onChange={this.onChange}></input>
+          <input name="processName" value={this.props.processForm.process} onChange={this.onChange}></input>
           <label htmlFor="processCategory"><strong>Category</strong></label><br/>
-          <select name="processCategory" onChange={this.onChange} value={this.state.processCategory} className="processCategory">
+          <select name="processCategory" onChange={this.onChange} value={this.props.processForm.category} className="processCategory">
             <option value="lifestyle">Lifestyle</option>
             <option value="work">Work</option>
             <option value="self development">Self Development</option>
@@ -100,8 +94,8 @@ class ProcessModal extends React.Component {
           </select>
           <br/>
           <label htmlFor="tags"><strong>Tags</strong></label>
-          <TagInput tags={this.state.tags} onChange={this.changeTags} /><br/>
-          <button onClick={this.closeModal}>Cancel</button>
+          <TagInput tags={this.props.processForm.tags} name="tags" onChange={this.changeTags} /><br/>
+          <button onClick={this.closeModalAnimation}>Cancel</button>
           {submit}
         </div>
       );
@@ -139,10 +133,17 @@ class ProcessModal extends React.Component {
 const mapStateToProps = (state) => {
   return {
     processForm: state.processForm,
+    processModal: state.processModal,
     auth: state.auth
   }
 }
 
-const mapDispatchToProps = { updateProcessForm, requestProcessCreation, requestProcessUpdate }
+const mapDispatchToProps = { 
+  updateProcessForm, 
+  requestProcessCreation, 
+  requestProcessUpdate, 
+  closeProcessModal
+}
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProcessModal);

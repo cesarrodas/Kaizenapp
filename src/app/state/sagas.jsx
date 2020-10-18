@@ -81,8 +81,10 @@ export function* createProcess(){
     if(data.ok){
       yield put(actions.processCreated());
       yield put(actions.getUserData());
+      yield put(actions.closeProcessModal(true));
     } else {
       yield put(actions.processCreationFailed());
+      yield put(actions.closeProcessModal(true));
     }
   }
 }
@@ -101,9 +103,14 @@ export function* updateProcess(){
     const { data } = yield axios.put(url + `/api/processes/${processData.payload.id}`, updateData, { withCredentials: true })
 
     if(data.ok){
+      //yield put(actions.showProcessEditModal(false));
+      yield put(actions.closeProcessModal(true));
+      yield put(actions.getUserData());
       console.log("great update to data");
+      yield put(actions.processEditComplete());
     } else {
-      console.log("update failed");
+      yield put(actions.processEditFailed());
+      yield put(actions.closeProcessModal(true));
     }
     // what can I do to pass the correct data to the form. 
     //const { data } 
@@ -123,8 +130,24 @@ export function* deleteProcess(){
     if(data.ok){
       yield put(actions.processDeleteComplete());
       yield put(actions.getUserData());
+      yield put(actions.closeProcessModal(true));
     } else {
       yield put(actions.processDeleteFailed());
+      yield put(actions.closeProcessModal(true));
+    }
+  }
+}
+
+export function* getReplays(){
+  while(true){
+    const request = yield take(actions.REQUEST_REPLAYS);
+    
+    const { data } = yield axios.get( url + `/api/replays/process/${request.payload.id}`, { widthCredentials: true });
+
+    if(data.ok){
+      yield put(actions.requestReplaysComplete(data.result));
+    } else {
+      yield put(actions.requestReplaysFailed());
     }
   }
 }
