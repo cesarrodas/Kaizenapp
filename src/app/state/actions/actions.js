@@ -49,6 +49,18 @@ export const REQUEST_REPLAYS_FAILED = 'REQUEST_REPLAYS_FAILED';
 export const UPDATE_SELECTED_PROCESS = 'UPDATE_SELECTED_PROCESS';
 export const UPDATE_REPLAY_PAGE = 'UPDATE_REPLAY_PAGE';
 
+export const REQUEST_REPLAY_CREATE = 'REQUEST_REPLAY_CREATE';
+export const REPLAY_CREATE_COMPLETE = 'REPLAY_CREATE_COMPLETE';
+export const REPLAY_CREATE_FAILED = 'REPLAY_CREATE_FAILED';
+export const REQUEST_REPLAY_UPDATE = 'REQUEST_REPLAY_UPDATE';
+export const REPLAY_UPDATE_COMPLETE = 'REPLAY_UPDATE_COMPLETE';
+export const REPLAY_UPDATE_FAILED = 'REPLAY_UPDATE_FAILED';
+export const REQUEST_REPLAY_DELETE = 'REQUEST_REPLAY_DELETE';
+export const REPLAY_DELETE_COMPLETE = 'REPLAY_DELETE_COMPLETE';
+export const REPLAY_DELETE_FAILED = 'REPLAY_DELETE_FAILED'; 
+
+export const SELECTED_REPLAY_INDEX = "SELECTED_REPLAY_INDEX";
+
  //example of choices for a selector.
 export const VisibilityFilters = {
   SHOW_ALL: 'SHOW_ALL',
@@ -210,5 +222,63 @@ export const updateSelectedProcess = (payload) => ({
 
 export const updateReplayPage = (payload) => ({
   type: UPDATE_REPLAY_PAGE,
+  payload: payload
+});
+
+
+// export const REQUEST_REPLAY_CREATE = 'REQUEST_REPLAY_CREATE';
+// export const REPLAY_CREATE_COMPLETE = 'REPLAY_CREATE_COMPLETE';
+// export const REPLAY_CREATE_FAILED = 'REPLAY_CREATE_FAILED';
+// export const REQUEST_REPLAY_UPDATE = 'REQUEST_REPLAY_UPDATE';
+// export const REPLAY_UPDATE_COMPLETE = 'REPLAY_UPDATE_COMPLETE';
+// export const REPLAY_UPDATE_FAILED = 'REPLAY_UPDATE_FAILED';
+// export const REQUEST_REPLAY_DELETE = 'REQUEST_REPLAY_DELETE';
+// export const REPLAY_DELETE_COMPLETE = 'REPLAY_DELETE_COMPLETE';
+// export const REPLAY_DELETE_FAILED = 'REPLAY_DELETE_FAILED'; 
+
+// REPLAY ACTIONS
+
+export const requestReplayCreate = (payload) => ({
+  type: REQUEST_REPLAY_CREATE,
+  payload: payload
+});
+
+export const requestReplayUpdate = (payload) => ({
+  type: REQUEST_REPLAY_UPDATE,
+  payload: payload
+});
+
+export const requestReplayDelete = (payload) => ({
+  type: REQUEST_REPLAY_DELETE,
+  payload: payload
+});
+
+export const replayCreateComplete = () => ({
+  type: REPLAY_CREATE_COMPLETE
+});
+
+export const replayCreateFailed = () => ({
+  type: REPLAY_CREATE_FAILED
+});
+
+export const replayUpdateComplete = () => ({
+  type: REPLAY_UPDATE_COMPLETE
+});
+
+export const replayUpdateFailed = () => ({
+  type: REPLAY_UPDATE_FAILED
+});
+
+export const replayDeleteComplete = () => ({
+  type: REPLAY_DELETE_COMPLETE
+});
+
+export const replayDeleteFailed = () => ({
+  type: REPLAY_DELETE_FAILED
+});
+
+// will update selected replay
+export const selectedReplayIndex = (payload) => ({
+  type: SELECTED_REPLAY_INDEX,
   payload: payload
 });

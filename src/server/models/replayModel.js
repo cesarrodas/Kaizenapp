@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 
 const replaySchema = new mongoose.Schema({
-  name: String,
   hypothesis: String,
   experiment: String,
   analysis: String,

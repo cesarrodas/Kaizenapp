@@ -50,9 +50,12 @@ class TagInput extends React.Component {
   }
 
   render(){
-    const tags = this.state.tags.map((tag, index) => {
-      return <li className="tag" key={"tag_" + index}>{tag}</li>
-    });
+    let tags = null;
+    if(this.state.tags.length){
+      tags = this.state.tags.map((tag, index) => {
+        return <li className="tag" key={"tag_" + index}>{tag}</li>
+      })
+    }
     return (
       <div className="tagContainer">
         <ul className="tagList">

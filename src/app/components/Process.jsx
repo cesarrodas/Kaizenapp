@@ -8,7 +8,8 @@ import {
   updateProcessForm,
   setProcessDeletable,
   requestReplays,
-  updateSelectedProcess 
+  updateSelectedProcess,
+  selectedReplayIndex
 } from '../state/actions/actions';
 
 class Process extends React.Component {
@@ -41,9 +42,9 @@ class Process extends React.Component {
   }
 
   goToReplays(){
-    console.log("props: ", this.props);
-    this.props.updateSelectedProcess(this.props.data.process);
-    this.props.requestReplays(this.props.data._id); 
+    this.props.updateSelectedProcess(this.props.data);
+    this.props.selectedReplayIndex(null);
+    this.props.requestReplays(this.props.data._id);
     this.props.history.push('/replays');
   }
 
@@ -69,7 +70,8 @@ const mapDispatchToProps = {
   updateProcessForm,
   setProcessDeletable,
   requestReplays,
-  updateSelectedProcess
+  updateSelectedProcess,
+  selectedReplayIndex
 };
 
 export default compose(
