@@ -104,15 +104,15 @@ class ProcessModal extends React.Component {
     } else {
       let submit = null;
       if(this.props.processModal.mode == modes.UPDATE){
-        submit = (<button type="submit" onClick={this.updateProcess}>Update</button>);
+        submit = (<button className="modalSubmit" type="submit" onClick={this.updateProcess}>Update</button>);
       } else {
-        submit = (<button type="submit" onClick={this.createProcess}>Submit</button>);
+        submit = (<button className="modalSubmit" type="submit" onClick={this.createProcess}>Submit</button>);
       }
       return (
         <div className="modal processModal">
           <h2>Process</h2>
           <label htmlFor="process"><strong>Process</strong></label><br/>
-          <input name="process" value={this.state.process || ''} onChange={this.onChange}></input>
+          <textarea name="process" className="processInput" value={this.state.process || ''} onChange={this.onChange}></textarea><br/>
           <label htmlFor="category"><strong>Category</strong></label><br/>
           <select name="category" onChange={this.onChange} value={this.state.category || ''} className="processCategory">
             <option value="lifestyle">Lifestyle</option>
@@ -123,8 +123,10 @@ class ProcessModal extends React.Component {
           <br/>
           <label htmlFor="tags"><strong>Tags</strong></label>
           <TagInput tags={this.state.tags} name="tags" onChange={this.changeTags} /><br/>
-          <button onClick={this.closeModalAnimation}>Cancel</button>
-          {submit}
+          <div className="buttonContainer">
+            <button className="modalCancel" onClick={this.closeModalAnimation}>Cancel</button>
+            {submit}
+          </div>
         </div>
       );
     }

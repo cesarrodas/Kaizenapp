@@ -48,6 +48,7 @@ export const REQUEST_REPLAYS_FAILED = 'REQUEST_REPLAYS_FAILED';
 
 export const UPDATE_SELECTED_PROCESS = 'UPDATE_SELECTED_PROCESS';
 export const UPDATE_REPLAY_PAGE = 'UPDATE_REPLAY_PAGE';
+export const RESET_REPLAY_PAGE = 'RESET_REPLAY_PAGE';
 
 export const REQUEST_REPLAY_CREATE = 'REQUEST_REPLAY_CREATE';
 export const REPLAY_CREATE_COMPLETE = 'REPLAY_CREATE_COMPLETE';
@@ -223,6 +224,10 @@ export const updateSelectedProcess = (payload) => ({
 export const updateReplayPage = (payload) => ({
   type: UPDATE_REPLAY_PAGE,
   payload: payload
+});
+
+export const resetReplayPage = () => ({
+  type: RESET_REPLAY_PAGE
 });
 
 

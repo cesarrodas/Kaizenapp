@@ -53,15 +53,15 @@ class TagInput extends React.Component {
     let tags = null;
     if(this.state.tags.length){
       tags = this.state.tags.map((tag, index) => {
-        return <li className="tag" key={"tag_" + index}>{tag}</li>
+        return <li className="processTag" key={"tag_" + index}>{tag}</li>
       })
     }
     return (
       <div className="tagContainer">
         <ul className="tagList">
           {tags}
-          <input className="tagInput" name="tagInput" value={this.state.tagInput} onKeyUp={this.keyUpHandler} onChange={this.handleChange}/>
         </ul>
+        <input className="tagInput" name="tagInput" value={this.state.tagInput} onKeyUp={this.keyUpHandler} onChange={this.handleChange}/>
       </div>
     )
   }

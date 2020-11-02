@@ -9,8 +9,7 @@ const replaysReducer = (state = defaultState, action) => {
   switch(action.type){
     case actions.REQUEST_REPLAYS:
       return Object.assign({}, state, {
-        loading: true,
-        replays: []
+        loading: true
       });
     case actions.REQUEST_REPLAYS_COMPLETE:
       return Object.assign({}, state, {

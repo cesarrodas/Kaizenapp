@@ -81,6 +81,14 @@ export function* createProcess(){
     const { data } = yield axios.post(url + '/api/processes/create', processData.payload, { withCredentials: true });
     
     if(data.ok){
+      yield put(actions.requestReplayCreate({
+        analysis: "",
+        conclusion: "",
+        experiment: "",
+        hypothesis: "",
+        creator: data.result.creator,
+        process: data.result._id
+      }));
       yield put(actions.processCreated());
       yield put(actions.getUserData());
       yield put(actions.closeProcessModal(true));
@@ -141,13 +149,19 @@ export function* createReplay(){
   while(true){
     // the request object is where we get the data
     const request = yield take(actions.REQUEST_REPLAY_CREATE);
+    console.log("REQUEST REPLAY CREATE", request);
 
     const createUrl = url + `/api/replay/create`;
 
     const { data } = yield axios.post(createUrl, request.payload, { withCredentials: true });
 
+    //console.log("CREATE REPLAY PAYLOAD: ", request);
+
     if(data.ok){
       yield put(actions.replayCreateComplete());
+      yield put(actions.requestReplays(request.payload.process));
+      yield put(actions.selectedReplayIndex(0));
+      yield put(actions.resetReplayPage());
     } else {
       yield put(actions.replayCreateFailed());
     }

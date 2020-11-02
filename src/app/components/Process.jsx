@@ -56,9 +56,16 @@ class Process extends React.Component {
     return (
       <div className="processContainer">
         <p className="processTask" onClick={this.goToReplays} >{this.props.data.process}</p>
-        <div className="tagsContainer">{tags}</div>
-        <button onClick={this.updateProcess} className="processEditButton">Edit</button>
-        <button onClick={this.deleteProcess} className="processDeleteButton">Delete</button>
+        <div className="processTags">
+          <span className="tagLabel">Tags: </span>
+          <div className="tagsContainer">{tags}</div>
+        </div>
+        <div className="detailContainer">
+          <button onClick={this.updateProcess} className="processEditButton">Edit</button>
+          <button onClick={this.deleteProcess} className="processDeleteButton">Delete</button>
+          <div className="break"></div>
+          <span className="processCategoryLabel">{this.props.data.category}</span>
+        </div>
       </div>
     )
   }
