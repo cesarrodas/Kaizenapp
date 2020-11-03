@@ -195,12 +195,17 @@ export function* deleteReplay(){
     const request = yield take(actions.REQUEST_REPLAY_DELETE);
     const replayId = request.payload._id;
 
+    console.log("replay id: ", replayId);
+
     const deleteUrl = url + `/api/replay/${replayId}`;
 
-    const { data } = yield axios.put(deleteUrl, request, { withCredentials: true });
+    const { data } = yield axios.delete(deleteUrl, request, { withCredentials: true });
   
     if(data.ok){
       yield put(actions.replayDeleteComplete());
+      yield put(actions.requestReplays(request.payload.process));
+      //yield put(actions.selectedReplayIndex(0));
+      // yield put(actions.resetReplayPage());
     } else {
       yield put(actions.replayDeleteFailed());
     }

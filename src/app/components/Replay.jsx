@@ -25,6 +25,7 @@ class Replay extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.createReplay = this.createReplay.bind(this);
     this.updateReplay = this.updateReplay.bind(this);
+    this.deleteReplay = this.deleteReplay.bind(this);
     this.createPrevButton = this.createPrevButton.bind(this);
     this.createNextButton = this.createNextButton.bind(this);
     this.createDateDisplay = this.createDateDisplay.bind(this);
@@ -36,14 +37,14 @@ class Replay extends React.Component {
     if(prevProps.replays.replays.length > 0 && this.props.replays.replays.length == 0) {
       this.props.resetReplayPage();
     }
-
-    if(prevProps.replays.replays[prevProps.selectedReplayIndex] !== this.props.replays.replays[this.props.selectedReplayIndex]){
-      let replay = this.props.replays.replays[this.props.selectedReplayIndex];
-      this.setState({
+    
+    if(prevProps.replays.replays[prevProps.replayPage.selectedReplayIndex] !== this.props.replays.replays[this.props.replayPage.selectedReplayIndex]){
+      let replay = this.props.replays.replays[this.props.replayPage.selectedReplayIndex];
+      this.props.updateReplayPage({
         hypothesis: replay.hypothesis,
         experiment: replay.experiment,
         analysis: replay.analysis,
-        conclusion: replay.conclusion 
+        conclusion: replay.conclusion
       });
     }
 
@@ -114,6 +115,15 @@ class Replay extends React.Component {
     this.props.requestReplayUpdate(newReplay);
   }
 
+  deleteReplay(){
+    const payload = {
+      _id: this.props.replays.replays[this.state.selectedReplayIndex]._id,
+      process: this.props.replayPage.selectedProcess._id
+    }
+
+    this.props.requestReplayDelete(payload);
+  }
+
   createPrevButton(){
     if(this.props.replays.replays[this.state.selectedReplayIndex + 1]){
       const nextReplay = this.props.replays.replays[this.state.selectedReplayIndex + 1];
@@ -167,6 +177,9 @@ class Replay extends React.Component {
     const createButton = this.state.selectedReplayIndex == 0 || this.props.replays.replays.length == 0 ? 
       <button className="replayCreateButton" onClick={this.createReplay}>New Page</button> : null;
 
+    const deleteButton = this.props.replays.replays.length > 1 ? 
+      <button className="replayDeleteButton" onClick={this.deleteReplay}>Delete</button> : null;
+
     return (
       <div className="span6">
         <div className="replayPage">
@@ -187,6 +200,7 @@ class Replay extends React.Component {
           <textarea name="conclusion" value={this.state.conclusion} onChange={this.handleChange}></textarea><br/>
           {/* <button className="saveButton" type="button">Save</button> */}
           <div className="buttonContainer">
+            {deleteButton}
             {button}
           </div>
           <hr/>

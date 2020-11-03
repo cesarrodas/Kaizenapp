@@ -96,9 +96,11 @@ class ProcessModal extends React.Component {
       return (
         <div className="modal processModal">
           <h2>Delete</h2>
-          <p>Are you sure? </p>
-          <button onClick={this.closeModalAnimation}>Cancel</button>
-          <button onClick={this.deleteProcess}>Delete</button>
+          <p>Are you sure you want to delete this process? </p>
+          <div className="buttonContainer">
+            <button className="cancelDeleteProcess" onClick={this.closeModalAnimation}>Cancel</button>
+            <button className="confirmDeleteProcess" onClick={this.deleteProcess}>Delete</button>
+          </div>
         </div>
       )
     } else {
