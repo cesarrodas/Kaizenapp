@@ -25,7 +25,7 @@ class Dashboard extends React.Component {
     }
     
     return (
-      <div className="span8">
+      <div className="dashboardContainer">
         <h1 className="processesBanner">Your Processes</h1>
         <div className="processesContainer">
           {processes}

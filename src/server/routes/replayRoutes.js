@@ -1,12 +1,18 @@
 import Replay from '../models/replayModel';
 import { sureThing, responseFinalizer } from '../../helpers';
+import { authentication } from './authRoutes';
 
 export const replayRoutes = (app) => {
 
-  app.get('/api/replays/process/:id', async (req, res) => {
+  app.get('/api/replays/process/:id', authentication, async (req, res) => {
     const id = req.params.id;
 
-    const replays = await sureThing(Replay.find({ process: id }).sort({ createdAt: 'desc' }).exec(), {
+    if(!res.locals._id) {
+      res.status(403);
+      responseFinalizer(req, res, { ok: false, message: "Forbidden."});
+    }
+
+    const replays = await sureThing(Replay.find({ process: id, creator: res.locals._id }).sort({ createdAt: 'desc' }).exec(), {
       success: 'success',
       rejected: 'The replays were not found.'
     });
@@ -21,10 +27,15 @@ export const replayRoutes = (app) => {
 
   });
 
-  app.get('/api/replay/:id', async (req, res) => {
+  app.get('/api/replay/:id', authentication, async (req, res) => {
     const id = req.params.id;
 
-    const foundReplay = await sureThing(Replay.findOne({ _id: id }).exec(), {
+    if(!res.locals._id) {
+      res.status(403);
+      responseFinalizer(req, res, { ok: false, message: "Forbidden."});
+    }
+
+    const foundReplay = await sureThing(Replay.findOne({ _id: id, creator: res.locals._id }).exec(), {
       success: 'success',
       rejected: 'The replay was not found.'
     });
@@ -39,12 +50,15 @@ export const replayRoutes = (app) => {
 
   });
   
-  app.post('/api/replay/create', async (req, res) => {
-
-    console.log("NEW REPLAY BODY", req.body);
-
+  app.post('/api/replay/create', authentication, async (req, res) => {
+    
     const { process, creator, hypothesis, experiment, analysis, conclusion, tags } = req.body;
- 
+
+    if(!res.locals._id || creator != res.locals._id) {
+      res.status(403);
+      responseFinalizer(req, res, { ok: false, message: "Forbidden."});
+    }
+
     const newReplay = new Replay(
       {
         process: process, 
@@ -71,9 +85,14 @@ export const replayRoutes = (app) => {
 
   });
 
-  app.put('/api/replay/:id', async (req, res) => {
+  app.put('/api/replay/:id', authentication, async (req, res) => {
     const newReplay = {};
     const id = req.params.id;
+
+    if(!res.locals._id) {
+      res.status(403);
+      responseFinalizer(req, res, { ok: false, message: "Forbidden."});
+    }
 
     if(req.body.process){
       newReplay.process = req.body.process;
@@ -99,7 +118,7 @@ export const replayRoutes = (app) => {
       newReplay.tags = req.body.tags;
     }
 
-    const updatedReplay = await sureThing(Replay.findOneAndUpdate({ _id: id }, newReplay), {
+    const updatedReplay = await sureThing(Replay.findOneAndUpdate({ _id: id, creator: res.locals._id }, newReplay), {
       success: 'success',
       rejected: 'Replay failed to update.'
     });
@@ -117,7 +136,12 @@ export const replayRoutes = (app) => {
   app.delete('/api/replay/:id', async (req, res) => {
     const id = req.params.id;
 
-    const deleted = await sureThing(Replay.findOneAndDelete({ _id: id }), {
+    if(!res.locals._id) {
+      res.status(403);
+      responseFinalizer(req, res, { ok: false, message: "Forbidden."});
+    }
+
+    const deleted = await sureThing(Replay.findOneAndDelete({ _id: id, creator: res.locals._id }), {
       success: "success",
       rejected: "Replay was not deleted."
     });

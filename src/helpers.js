@@ -1,5 +1,5 @@
 export const sureThing = (promise, message = { success: "success", rejected: "rejected" }) => 
-  promise.then(result => ({ ok: true, result, message: message.success }))
+  promise.then(result => result ? ({ ok: true, result, message: message.success }) : ({ ok: false, result, message: message.rejected }))
   .catch(error => Promise.resolve({ ok: false, error, message: message.rejected }));
 
 export const responseHandler = (req, res, data) => {

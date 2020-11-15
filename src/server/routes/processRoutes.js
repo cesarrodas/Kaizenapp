@@ -1,13 +1,19 @@
 import Process from '../models/processModel';
 import { sureThing, responseFinalizer } from '../../helpers'; 
+import { authentication } from './authRoutes';
 //import { authentication, responseHandler } from './authRoutes'; // import { authentication, responseHandler } from './authRoutes'; 
 
 export const processRoutes = (app) => {
 
-  app.get('/api/processes/user/:userId', async (req, res) => {
-    const userId = req.params.userId;
+  app.get('/api/processes/user/:userId', authentication, async (req, res) => {
+    // const userId = req.params.userId;
 
-    const processes = await sureThing(Process.find({ creator: userId }).exec(), {
+    if(!id || !res.locals.user._id){
+      res.status(404);
+      res.responseFinalizer(req, res, { ok: false, message: "missing user"});
+    }
+
+    const processes = await sureThing(Process.find({ creator: res.locals.user._id }).exec(), {
       success: 'success',
       rejected: 'The processes were not found.'
     });
@@ -22,13 +28,23 @@ export const processRoutes = (app) => {
 
   });
 
-  app.get('/api/processes/:id', async (req, res) => {
+  app.get('/api/processes/:id', authentication, async (req, res) => {
     const id = req.params.id;
 
-    const foundProcess = await sureThing(Process.findOne({ _id: id }).exec(), {
+    if(!id || !res.locals.user){
+      res.status(404);
+      responseFinalizer(req, res, { ok: false, message: "missing user"});
+    }
+
+    const foundProcess = await sureThing(Process.findOne({ _id: id, creator: res.locals.user._id }).exec(), {
       success: 'success',
       rejected: 'The process was not found.'
     });
+
+    if(res.locals.user._id !== foundProcess.result.creator){
+      res.status(403);
+      responseFinalizer(req, res, { ok: false, message: "Forbidden"});
+    }
 
     if(!foundProcess.ok){
       res.status(404);
@@ -40,10 +56,13 @@ export const processRoutes = (app) => {
 
   });
 
-  app.post('/api/processes/create', async (req, res) => {
+  app.post('/api/processes/create', authentication, async (req, res) => {
     const { process, creator, category, tags } = req.body;
 
-    console.log("new process data: ", process, creator, category, tags);
+    if(res.locals.user._id !== creator){
+      res.status(403);
+      responseFinalizer(req, res, { ok: false, message: "Forbidden"});
+    }
 
     const newProcess = new Process({ process: process, creator: creator, category: category, tags: tags });
 
@@ -62,7 +81,7 @@ export const processRoutes = (app) => {
 
   });
 
-  app.put('/api/processes/:id', async (req, res) => {
+  app.put('/api/processes/:id', authentication, async (req, res) => {
     const newProcess = {};
     const id = req.params.id;
 
@@ -77,9 +96,13 @@ export const processRoutes = (app) => {
     if(req.body.tags){
       newProcess.tags = req.body.tags;
     }
+    
+    if(!res.locals.user._id){
+      res.status(404);
+      responseFinalizer(req, res, { ok: false, message: "Forbidden"});
+    }
 
-
-    const updatedProcess = await sureThing(Process.findOneAndUpdate({ _id: id }, newProcess), {
+    const updatedProcess = await sureThing(Process.findOneAndUpdate({ _id: id, creator: res.locals.user._id }, newProcess), {
       success: 'success',
       rejected: 'Process failed to update.'
     });
@@ -94,10 +117,15 @@ export const processRoutes = (app) => {
 
   });
 
-  app.delete('/api/processes/:id', async (req, res) => {
+  app.delete('/api/processes/:id', authentication ,async (req, res) => {
     const id = req.params.id;
 
-    const deleted = await sureThing(Process.findOneAndDelete({ _id: id }), {
+    if(!res.locals.user._id){
+      res.status(404);
+      responseFinalizer(req, res, { ok: false, message: "Forbidden"});
+    }
+
+    const deleted = await sureThing(Process.findOneAndDelete({ _id: id, creator: res.locals.user._id }), {
       success: "success",
       rejected: "Process was not deleted."
     });

@@ -1,7 +1,7 @@
 import { sureThing, responseFinalizer, filterObject } from '../../helpers';
 import { checkExistance } from '../validators/userValidators';
+import { authentication } from './authRoutes';
 
-//import mongoose from 'mongoose';
 import User from '../models/userModel'; 
 import bcrypt from 'bcrypt';
 
@@ -9,8 +9,13 @@ const saltRounds = 12;
 
 export const userRoutes = (app) => {
 
-  app.get('/api/users/:id', async (req, res) => {
+  app.get('/api/users/:id', authentication, async (req, res) => {
     const id = req.params.id;
+
+    if(!id || !res.locals.user._id){
+      res.status(404);
+      res.responseFinalizer(req, res, { ok: false, message: "missing user"});
+    }
 
     const response = await sureThing(User.findOne({ _id: id }).select('categories _id username email createdAt updatedAt').exec(), {
       success: "success",
@@ -26,8 +31,18 @@ export const userRoutes = (app) => {
     }
   });
 
-  app.get('/api/users/:username', async (req, res) => {
+  app.get('/api/users/name/:username', authentication, async (req, res) => {
     const username = req.params.username;
+
+    if(!username || !res.locals.user.username){
+      res.status(404);
+      res.responseFinalizer(req, res, { ok: false, message: "missing user"});
+    }
+
+    if(username !== res.locals.user.username){
+      res.status(403);
+      res.responseFinalizer(res, res, { ok: false, message: "Forbidden"});
+    }
 
     const response = await sureThing(User.findOne({ username: username }).select('categories _id username email createdAt updatedAt').exec(), {
       success: "success",
@@ -80,9 +95,19 @@ export const userRoutes = (app) => {
 
   });
 
-  app.put('/api/users/:id', async (req, res) => {
+  app.put('/api/users/:id', authentication, async (req, res) => {
     let newUser = {};
     const id = req.params.id;
+
+    if(!id || !res.locals.user._id){
+      res.status(404);
+      res.responseFinalizer(req, res, { ok: false, message: "missing user"});
+    }
+
+    if(id !== res.locals.user._id){
+      res.status(403);
+      res.responseFinalizer(res, res, { ok: false, message: "Forbidden"});
+    }
 
     if(req.body.password){
       newUser.password = req.body.password;
@@ -106,9 +131,19 @@ export const userRoutes = (app) => {
     responseFinalizer(req, res, updated);
   });
 
-  app.delete('/api/users/:id', async (req, res) => {
+  app.delete('/api/users/:id', authentication, async (req, res) => {
 
     const id = req.params.id;
+
+    if(!id || !res.locals.user._id){
+      res.status(404);
+      res.responseFinalizer(req, res, { ok: false, message: "missing user"});
+    }
+
+    if(id !== res.locals.user._id){
+      res.status(403);
+      res.responseFinalizer(res, res, { ok: false, message: "Forbidden"});
+    }
 
     const deleted = await sureThing(User.findOneAndDelete({ _id: id }), {
       success: "success",

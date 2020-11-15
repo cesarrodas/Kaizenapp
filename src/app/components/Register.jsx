@@ -1,5 +1,5 @@
 import React from 'react';
-
+import DOMPurify from 'dompurify';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -27,9 +27,15 @@ class Register extends React.Component {
   }
 
   handleSubmit(event){
-    // handle it here
     event.preventDefault();
-    this.props.requestRegisterUser(this.state.username, this.state.password, this.state.email);
+    
+    let input = {
+      username: DOMPurify.sanitize(this.state.username),
+      password: DOMPurify.sanitize(this.state.password),
+      email: DOMPurify.sanitize(this.state.email)
+    }
+
+    this.props.requestRegisterUser(input.username, input.password, input.email);
   }
 
   handleChange(event){

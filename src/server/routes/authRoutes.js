@@ -1,6 +1,5 @@
 import User from '../models/userModel';
 import Process from '../models/processModel';
-//import Replay from '../models/replayModel';
 import bcrypt from 'bcrypt';
 import jsonwebtoken from 'jsonwebtoken';
 import { sureThing, responseFinalizer, filterObject } from '../../helpers';
@@ -105,7 +104,7 @@ export const authRoutes = ( app ) => {
       success: 'success',
       rejected: 'User not found.'
     });
-
+    
     if(!user.ok){
       res.status(404);
       responseFinalizer(req, res, user)
@@ -116,14 +115,12 @@ export const authRoutes = ( app ) => {
       rejected: 'Username/Password combination was not found.'
     });
 
-    if(!match.ok){
+    if(!match.ok) {
       res.status(404);
       responseFinalizer(req, res, match);
     }
 
     let newUser = filterObject(["hash", "loginKeys", "__v"], user.result._doc);
-
-    console.log("newUSer: ", newUser);
 
     res.status(200);
     addAccessCookie(res, username, newUser._id);
@@ -144,6 +141,7 @@ export const authentication = (req, res, next) => {
     let decoded;
     try {
       decoded = jsonwebtoken.verify(access_token, process.env.PRIVATE_KEY);
+      res.locals.user = decoded;
       if(decoded.apiExp - new Date().getTime() > 0){
         next();
       } else {

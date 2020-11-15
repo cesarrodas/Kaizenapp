@@ -11,8 +11,15 @@ class Home extends React.Component {
 
   render() {
     return (
-      <div className="span12">
-        <h1>Welcome to Kaizen</h1>
+      <div className="span12 home">
+        {/* <picture className="bgImage">
+          <img className="bgImage" srcSet="../dist/assets/bg.jpg" />
+        </picture> */}
+        <div className="home-content">
+          <h1>Welcome to Kaizen</h1>
+          <p>Kaizen helps you pursue a better you. Create processes and refine them with small experiments.</p>
+          <button>Sign Up</button><button>Sign In</button>
+        </div>
       </div>
     );
   }

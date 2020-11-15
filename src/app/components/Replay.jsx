@@ -1,4 +1,5 @@
 import React from 'react';
+import DOMPurify from 'dompurify';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -103,10 +104,10 @@ class Replay extends React.Component {
     console.log("we are updating.");
 
     const newReplay = {
-      hypothesis: this.state.hypothesis,
-      experiment: this.state.experiment,
-      analysis: this.state.analysis,
-      conclusion: this.state.conclusion,
+      hypothesis: DOMPurify.sanitize(this.state.hypothesis),
+      experiment: DOMPurify.sanitize(this.state.experiment),
+      analysis: DOMPurify.sanitize(this.state.analysis),
+      conclusion: DOMPurify.sanitize(this.state.conclusion),
       process: this.props.replayPage.selectedProcess._id,
       creator: this.props.auth.userData._id,
       _id: this.props.replays.replays[this.state.selectedReplayIndex]._id

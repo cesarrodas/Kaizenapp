@@ -203,8 +203,8 @@ export function* deleteReplay(){
   
     if(data.ok){
       yield put(actions.replayDeleteComplete());
+      yield put(actions.selectedReplayIndex(0));
       yield put(actions.requestReplays(request.payload.process));
-      //yield put(actions.selectedReplayIndex(0));
       // yield put(actions.resetReplayPage());
     } else {
       yield put(actions.replayDeleteFailed());

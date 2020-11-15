@@ -1,4 +1,5 @@
 import React from 'react';
+import DOMPurify from 'dompurify';
 import { connect } from 'react-redux';
 import { 
   updateProcessForm,
@@ -71,18 +72,35 @@ class ProcessModal extends React.Component {
     });
   }
 
-  createProcess(){
+  createProcess() {
     const newProcess = {};
-    newProcess.process = this.props.processForm.process;
-    newProcess.category = this.props.processForm.category;
-    newProcess.creator = this.props.processForm.creator;
-    newProcess.tags = this.props.processForm.tags;
+    newProcess.process = DOMPurify.sanitize(this.props.processForm.process);
+    newProcess.category = DOMPurify.sanitize(this.props.processForm.category);
+    newProcess.creator = DOMPurify.sanitize(this.props.processForm.creator);
+    newProcess.tags = this.props.processForm.tags.map((tag) => {
+      return DOMPurify.sanitize(tag);
+    });
 
     this.props.requestProcessCreation(newProcess);
   }
 
-  updateProcess(){
-    this.props.requestProcessUpdate(this.props.processForm);
+  updateProcess() {
+    let newTags = this.props.processForm.tags.map((tag) => {
+      return DOMPurify.sanitize(tag);
+    });
+
+    let updatedProcess = {
+      process: DOMPurify.sanitize(this.props.processForm.process),
+      tags: newTags,
+      creator: this.props.processForm.creator,
+      category: this.props.processForm.category,
+      createdAt: this.props.processForm.createdAt,
+      updatedAt: this.props.processForm.updatedAt,
+      _v: this.props.processForm._v,
+      _id: this.props.processForm._id
+    }
+
+    this.props.requestProcessUpdate(updatedProcess);
   }
 
   deleteProcess(){

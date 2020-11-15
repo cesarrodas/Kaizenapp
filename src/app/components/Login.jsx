@@ -1,5 +1,6 @@
 import React from 'react';
 
+import DOMPurify from 'dompurify';
 import { compose } from 'redux';
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom';
@@ -27,10 +28,14 @@ class Login extends React.Component {
   }
   
   handleSubmit(event){
-    console.log("A user login was submitted: ", this.state);
-    //alert('A user login was submitted: ' + this.state);
     event.preventDefault();
-    this.props.requestAuthenticateUser(this.state.username, this.state.password);
+
+    let input = {
+      username: DOMPurify.sanitize(this.state.username),
+      password: DOMPurify.sanitize(this.state.password)
+    };
+
+    this.props.requestAuthenticateUser( input.username, input.password);
   }
 
   handleChange(event){
@@ -44,11 +49,13 @@ class Login extends React.Component {
       <div className="loginForm" >
         <h2>Log In</h2>
         <form onSubmit={this.handleSubmit}>
-          <label>Username:</label><br/>
+          <label>Username:</label>
           <input type="text" name="username" onChange={ this.handleChange } /><br/>
-          <label>Password:</label><br/>
+          <label>Password:</label>
           <input type="password" name="password" onChange={ this.handleChange }/><br/>
-          <input type="submit" value="Submit" />
+          <div className="buttonConainer">
+            <button className="confirmLoginButton" type="submit" value="Submit" >Log In</button>
+          </div>
         </form>
       </div>
     );
