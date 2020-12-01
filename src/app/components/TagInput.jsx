@@ -32,7 +32,7 @@ class TagInput extends React.Component {
   }
 
   keyUpHandler (event) {
-    if(event.key === " "){
+    if(event.key === " " && this.state.tagInput.trim() != ""){
       this.addTag(event)
     } else if (event.key === "Backspace" && this.state.tagInput === ""){
       this.setState({

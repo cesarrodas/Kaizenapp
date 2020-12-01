@@ -82,7 +82,6 @@ export const userRoutes = (app) => {
 
     const response = await sureThing(user.save());
 
-    //console.log("USER RESPONSE: ", response.result);
     const userData = filterObject(["hash", "loginKeys", "__v"], response.result._doc);
 
     if(!response.ok){

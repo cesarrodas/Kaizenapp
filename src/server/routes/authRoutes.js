@@ -19,7 +19,7 @@ const addAccessCookie = (res, username, id) => {
   });
 }
 
-const unauthorized = (err) => {
+const unauthorized = (res, err) => {
   res.status(403);
   res.send({ 
     ok: false, 
@@ -48,8 +48,6 @@ export const authRoutes = ( app ) => {
     if(req.signedCookies.access_token){
       const cookie = req.signedCookies.access_token;
       const decoded = jsonwebtoken.verify(cookie, process.env.PRIVATE_KEY);
-
-      console.log("decoded", decoded);
       
       const userData = await sureThing(User.findOne({ _id: decoded._id }).select('categories _id username email createdAt updatedAt').exec(), {
         success: "success",
@@ -68,8 +66,6 @@ export const authRoutes = ( app ) => {
         responseFinalizer(req, res, response);
       }
 
-      console.log("usedata", userData);
-
       allData.user = userData.result;
 
       const processes = await sureThing(Process.find({ creator: decoded._id }).exec(), {
@@ -81,8 +77,6 @@ export const authRoutes = ( app ) => {
         res.status(404);
         responseFinalizer(req, res, response);
       }
-
-      console.log("processes", processes);
 
       allData.processes = processes.result;
 
@@ -110,6 +104,8 @@ export const authRoutes = ( app ) => {
       responseFinalizer(req, res, user)
     }
 
+    const passwordtry = await bcrypt.compare(password, user.result.hash);
+
     const match = await sureThing(bcrypt.compare(password, user.result.hash), {
       success: 'success',
       rejected: 'Username/Password combination was not found.'
@@ -132,8 +128,9 @@ export const authRoutes = ( app ) => {
 
 export const authentication = (req, res, next) => {
 
+  console.log("signed cookie", req.signedCookies.access_token);
   if(!req.signedCookies.access_token){
-    unauthorized();
+    unauthorized(res);
   }
 
   if(req.signedCookies.access_token){
@@ -149,7 +146,7 @@ export const authentication = (req, res, next) => {
         next();
       }
     } catch (err) {
-      Unauthorized(err);
+      Unauthorized(res, err);
     }
   }
 } 

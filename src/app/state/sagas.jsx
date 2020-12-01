@@ -147,7 +147,6 @@ export function* deleteProcess(){
 
 export function* createReplay(){
   while(true){
-    // the request object is where we get the data
     const request = yield take(actions.REQUEST_REPLAY_CREATE);
     console.log("REQUEST REPLAY CREATE", request);
 
@@ -155,7 +154,6 @@ export function* createReplay(){
 
     const { data } = yield axios.post(createUrl, request.payload, { withCredentials: true });
 
-    //console.log("CREATE REPLAY PAYLOAD: ", request);
 
     if(data.ok){
       yield put(actions.replayCreateComplete());
@@ -172,15 +170,11 @@ export function* updateReplay(){
   while(true){
     const request = yield take(actions.REQUEST_REPLAY_UPDATE);
     const replayId = request.payload._id;
-    
-    console.log("REPLAY ID: ", replayId);
-    console.log("REQUEST DATA: ", request);
 
     const updateUrl = url + `/api/replay/${replayId}`;
 
     const { data } = yield axios.put(updateUrl, request.payload, { withCredentials: true });
 
-    console.log("UPDATE DATE RESULT: ", data);
   
     if(data.ok){
       yield put(actions.replayUpdateComplete());
@@ -199,13 +193,12 @@ export function* deleteReplay(){
 
     const deleteUrl = url + `/api/replay/${replayId}`;
 
-    const { data } = yield axios.delete(deleteUrl, request, { withCredentials: true });
+    const { data } = yield axios.delete(deleteUrl, { withCredentials: true });
   
     if(data.ok){
       yield put(actions.replayDeleteComplete());
       yield put(actions.selectedReplayIndex(0));
       yield put(actions.requestReplays(request.payload.process));
-      // yield put(actions.resetReplayPage());
     } else {
       yield put(actions.replayDeleteFailed());
     }
@@ -216,9 +209,7 @@ export function* getReplays(){
   while(true){
     const request = yield take(actions.REQUEST_REPLAYS);
 
-    console.log("requesting replays: ", request);
-    
-    const { data } = yield axios.get( url + `/api/replays/process/${request.payload}`, { widthCredentials: true });
+    const { data } = yield axios.get( url + `/api/replays/process/${request.payload}`, { withCredentials: true });
 
     if(data.ok){
       yield put(actions.requestReplaysComplete(data.result));

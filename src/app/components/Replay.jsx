@@ -31,6 +31,7 @@ class Replay extends React.Component {
     this.createNextButton = this.createNextButton.bind(this);
     this.createDateDisplay = this.createDateDisplay.bind(this);
     this.backToProcesses = this.backToProcesses.bind(this);
+    this.formatDate = this.formatDate.bind(this);
   }
 
   componentDidUpdate(prevProps){
@@ -95,14 +96,10 @@ class Replay extends React.Component {
       creator: this.props.auth.userData._id
     }
 
-    //console.log("new data", newReplay);
-
     this.props.requestReplayCreate(newReplay);
   }
 
   updateReplay(){
-    console.log("we are updating.");
-
     const newReplay = {
       hypothesis: DOMPurify.sanitize(this.state.hypothesis),
       experiment: DOMPurify.sanitize(this.state.experiment),
@@ -125,6 +122,17 @@ class Replay extends React.Component {
     this.props.requestReplayDelete(payload);
   }
 
+  formatDate(date){
+    let hours = date.getHours();
+    let day = "AM"
+    if(date.getHours() > 12){
+      hours = date.getHours() - 12;
+      day = "PM"
+    }
+    let minutes = date.getMinutes() > 9 ? date.getMinutes() : '0' + date.getMinutes();
+    return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()} @ ${hours}:${minutes} ${day}`;
+  }
+
   createPrevButton(){
     if(this.props.replays.replays[this.state.selectedReplayIndex + 1]){
       const nextReplay = this.props.replays.replays[this.state.selectedReplayIndex + 1];
@@ -132,11 +140,13 @@ class Replay extends React.Component {
         this.props.selectedReplayIndex(this.state.selectedReplayIndex + 1);
       }
       const createDateObject = new Date(nextReplay.createdAt);
-      const dateFormat = `${createDateObject.getMonth() + 1}/${createDateObject.getDate()}/${createDateObject.getFullYear()}`;
+      const dateFormat = this.formatDate(createDateObject);
       return <button className="prevButton" onClick={prevReplayHandler}>{dateFormat}</button>;
     }
     return null;
   }
+
+
 
   createNextButton(){
     if(this.props.replays.replays[this.state.selectedReplayIndex - 1]){
@@ -145,7 +155,8 @@ class Replay extends React.Component {
         this.props.selectedReplayIndex(this.state.selectedReplayIndex - 1);
       }
       const createDateObject = new Date(nextReplay.createdAt);
-      const dateFormat = `${createDateObject.getMonth() + 1}/${createDateObject.getDate()}/${createDateObject.getFullYear()}`;
+      const dateFormat = this.formatDate(createDateObject);
+
       return <button className="nextButton" onClick={nextReplayHandler}>{dateFormat}</button>;
     }
     return null;
@@ -154,10 +165,10 @@ class Replay extends React.Component {
   createDateDisplay(){
     if(this.props.replays.replays[this.state.selectedReplayIndex]){
       let date = new Date(this.props.replays.replays[this.state.selectedReplayIndex].createdAt);
-      return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
+      return this.formatDate(date);
     } 
     let date = new Date();
-    return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
+    return this.formatDate(date);
   }
 
   backToProcesses () {
@@ -167,48 +178,49 @@ class Replay extends React.Component {
   render(){
     const setDate = this.createDateDisplay();
 
-    console.log("SELECTED REPLAY INDEX: ", this.state.selectedReplayIndex);
-
     const prevButton = this.createPrevButton();
 
     const nextButton = this.createNextButton();
 
-    const button = <button className="replayUpdateButton" onClick={this.updateReplay}>Save</button>;
+    const button = <button className="replayUpdateButton" onClick={this.updateReplay}>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="24px" height="24px"><path d="M0 0h24v24H0z" fill="none"/><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+    </button>;
       
     const createButton = this.state.selectedReplayIndex == 0 || this.props.replays.replays.length == 0 ? 
-      <button className="replayCreateButton" onClick={this.createReplay}>New Page</button> : null;
+      <button className="replayCreateButton" onClick={this.createReplay}>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="24px" height="24px"><path d="M0 0h24v24H0z" fill="none"/><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 14h-3v3h-2v-3H8v-2h3v-3h2v3h3v2zm-3-7V3.5L18.5 9H13z"/></svg>
+      </button> : null;
 
     const deleteButton = this.props.replays.replays.length > 1 ? 
-      <button className="replayDeleteButton" onClick={this.deleteReplay}>Delete</button> : null;
+      <button className="replayDeleteButton" onClick={this.deleteReplay}>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="24px" height="24px"><path d="M0 0h24v24H0z" fill="none"/><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+      </button> : null;
 
     return (
-      <div className="span6">
-        <div className="replayPage">
-          <h4><label>Process</label></h4>
-          <p className="processBanner">{this.props.replayPage.selectedProcess.process}</p>
-          <div className="buttonContainer">
-            {prevButton}
-            {nextButton}
-            <p className="replayDate"><i>{setDate}</i></p>
-          </div>
-          <h4><label htmlFor="hypothesis">Hypothesis</label></h4>
-          <textarea name="hypothesis" value={this.state.hypothesis} onChange={this.handleChange}></textarea><br/>
-          <h4><label htmlFor="experiment">Experiment</label></h4>
-          <textarea name="experiment" value={this.state.experiment} onChange={this.handleChange}></textarea><br/>
-          <h4><label htmlFor="analysis">Analysis</label></h4>
-          <textarea name="analysis" value={this.state.analysis} onChange={this.handleChange}></textarea><br/>
-          <h4><label htmlFor="conclusion">Conclusion</label></h4>
-          <textarea name="conclusion" value={this.state.conclusion} onChange={this.handleChange}></textarea><br/>
-          {/* <button className="saveButton" type="button">Save</button> */}
-          <div className="buttonContainer">
-            {deleteButton}
-            {button}
-          </div>
-          <hr/>
-          <div className="buttonContainer"> 
-            <button className="processesButton" onClick={this.backToProcesses}>Processes</button>
-            {createButton}
-          </div>
+      <div className="replayPage">
+        <h4><label>Process</label></h4>
+        <p className="processBanner">{this.props.replayPage.selectedProcess.process}</p>
+        <div className="buttonContainer">
+          {prevButton}
+          {nextButton}
+          <p className="replayDate"><i>{setDate}</i></p>
+        </div>
+        <h4><label htmlFor="hypothesis">Hypothesis</label></h4>
+        <textarea name="hypothesis" value={this.state.hypothesis} onChange={this.handleChange}></textarea><br/>
+        <h4><label htmlFor="experiment">Experiment</label></h4>
+        <textarea name="experiment" value={this.state.experiment} onChange={this.handleChange}></textarea><br/>
+        <h4><label htmlFor="analysis">Analysis</label></h4>
+        <textarea name="analysis" value={this.state.analysis} onChange={this.handleChange}></textarea><br/>
+        <h4><label htmlFor="conclusion">Conclusion</label></h4>
+        <textarea name="conclusion" value={this.state.conclusion} onChange={this.handleChange}></textarea><br/>
+        <div className="buttonContainer">
+          {deleteButton}
+          {button}
+        </div>
+        <hr/>
+        <div className="buttonContainer"> 
+          <button className="processesButton" onClick={this.backToProcesses}><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="24px" height="24px"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 7v4H5.83l3.58-3.59L8 6l-6 6 6 6 1.41-1.41L5.83 13H21V7z"/></svg></button>
+          {createButton}
         </div>
       </div>
     )

@@ -30,7 +30,7 @@ class Dashboard extends React.Component {
         <div className="processesContainer">
           {processes}
         </div>
-        <button id="addProcess" onClick={this.props.openCreateProcessModal}>New Process</button>
+        <button id="addProcess" onClick={this.props.openCreateProcessModal}>+</button>
         {modal}
       </div>
     );

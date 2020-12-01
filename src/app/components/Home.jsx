@@ -16,7 +16,7 @@ class Home extends React.Component {
           <img className="bgImage" srcSet="../dist/assets/bg.jpg" />
         </picture> */}
         <div className="home-content">
-          <h1>Welcome to Kaizen</h1>
+          <span className="header">Kaizen</span>
           <p>Kaizen helps you pursue a better you. Create processes and refine them with small experiments.</p>
           <button>Sign Up</button><button>Sign In</button>
         </div>
