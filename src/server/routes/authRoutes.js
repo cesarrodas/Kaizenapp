@@ -64,6 +64,7 @@ export const authRoutes = ( app ) => {
       if(!userData.ok){
         res.status(404);
         responseFinalizer(req, res, response);
+        return;
       }
 
       allData.user = userData.result;
@@ -76,6 +77,7 @@ export const authRoutes = ( app ) => {
       if(!processes.ok){
         res.status(404);
         responseFinalizer(req, res, response);
+        return;
       }
 
       allData.processes = processes.result;
@@ -102,9 +104,8 @@ export const authRoutes = ( app ) => {
     if(!user.ok){
       res.status(404);
       responseFinalizer(req, res, user)
+      return;
     }
-
-    const passwordtry = await bcrypt.compare(password, user.result.hash);
 
     const match = await sureThing(bcrypt.compare(password, user.result.hash), {
       success: 'success',
@@ -114,6 +115,7 @@ export const authRoutes = ( app ) => {
     if(!match.ok) {
       res.status(404);
       responseFinalizer(req, res, match);
+      return;
     }
 
     let newUser = filterObject(["hash", "loginKeys", "__v"], user.result._doc);
@@ -128,7 +130,6 @@ export const authRoutes = ( app ) => {
 
 export const authentication = (req, res, next) => {
 
-  console.log("signed cookie", req.signedCookies.access_token);
   if(!req.signedCookies.access_token){
     unauthorized(res);
   }

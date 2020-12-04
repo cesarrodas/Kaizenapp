@@ -10,6 +10,9 @@ html, body {
   background-color: hsl(51.4, 14.1%, 80.8%);
   height: 100%;
   color: hsl(67.1, 34.4%, 18.4%);
+  font-family: 'Stoke', serif;
+  font-family: 'Hind Guntur', sans-serif;
+  line-height: 16px;
 }
 
 main {
@@ -93,6 +96,8 @@ hr {
   color: hsl(51.4, 14.1%, 90.8%);;
   padding-left: 1rem;
   font-weight: bold;
+  font-family: 'Alegreya SC', serif;
+  line-height: 40px;
 }
 
 nav ul {
@@ -105,6 +110,7 @@ nav ul {
 
 nav ul li {
   display: inline;
+  font-weight: bold;
 }
 
 nav ul li a {
@@ -117,7 +123,7 @@ nav ul li a {
 }
 
 nav ul li a:hover {
-  background-color: hsl(39.6, 21.7%, 65.1%);
+  background-color: hsl(39.6, 21.7%, 55.1%);
   color: #222;
   cursor: pointer;
 }
@@ -129,25 +135,119 @@ nav ul li a:hover {
 
 .home {
   background-color: black;
-  background-image: url("./dist/assets/bg2.jpg");
+  background-image: url("./dist/assets/bg3.jpg");
   background-size: cover;
   position: relative;
 }
 
 .header {
-  font-size: 50px;
+  font-size: 80px;
   color: white;
+  position: absolute;
+  left: 20%;
+  top: 10%;
+  font-family: 'Alegreya SC', serif;
+}
+
+.info {
+  font-size: 20px;
+  color: white;
+  position: absolute;
+  left: 20%;
+  top: 100px;
+  width: 40%;
+  line-height: 24px;
+}
+
+.actionContainer {
+  margin-top: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media only screen and (min-width: 768px) {
+  .actionContainer {
+    margin-top: 200px;
+  }
+}
+
+.frontSignupButton {
+  border-radius: 2px;
+  background-color: hsl(56, 61%, 61.8%);
+  padding: 8px 16px;
+  border: 2px solid hsl(67.1, 34.4%, 28.4%);
+  font-weight: bold;
+  font-size: 20px;
+  color:hsl(67.1, 34.4%, 20.4%);
+  margin: 10px;
+  cursor: pointer;
+}
+
+.frontSignupButton:hover {
+  background-color: hsl(56, 61%, 51.8%);
+}
+
+.frontSignupButton:focus {
+  outline: none;
+}
+
+.frontLoginButton {
+  border-radius: 2px;
+  background-color: hsl(56, 61%, 61.8%);
+  padding: 8px 16px;
+  border: 2px solid hsl(67.1, 34.4%, 28.4%);
+  font-weight: bold;
+  font-size: 20px;
+  color:hsl(67.1, 34.4%, 20.4%);
+  margin: 10px;
+  cursor: pointer;
+}
+
+.frontLoginButton:hover {
+  background-color: hsl(56, 61%, 51.8%);
+}
+
+.frontLoginButton:focus {
+  outline: none;
 }
 
 /*****************************/
 /* Register Component Styles */
 /*****************************/
 
-.registerForm {
-  grid-column: 5 / span 4;
+.registerFormContainer {
+  padding: 40px;
+  grid-column: span 12;
   grid-row: 1fr;
   margin-left: auto;
   margin-right: auto;
+  width: 220px;
+}
+
+.registerForm label {
+  font-weight: bold;
+  display: block;
+  margin: 5px 0;
+}
+
+.registerForm .errorLabel {
+  color: red;
+  margin: 8px 0;
+}
+
+.confirmRegisterButton {
+  border-radius: 5px;
+  background-color: hsl(56, 61%, 61.8%);
+  padding: 4px 8px;
+  border: 2px solid hsl(67.1, 34.4%, 28.4%);
+  font-weight: bold;
+  font-size: 16px;
+  background-image: none;
+  color:hsl(67.1, 34.4%, 20.4%);
+  margin-top: 20px;
+  float: right;
+  cursor: pointer;
 }
 
 /*****************************/
@@ -155,17 +255,37 @@ nav ul li a:hover {
 /*****************************/
 
 .loginForm {
-  grid-column: 5 / span 4;
+  grid-column: span 12;
   grid-row: 1fr;
+  width: 220px;
   margin-left: auto;
   margin-right: auto;
+  padding: 40px;
+  overflow-y: hidden;
 }
+
+@media only screen and (min-width: 768px) {
+  .loginForm {
+    grid-column: span 12;
+    min-width: 200px;
+  }
+}
+
+.loginForm .errorLabel {
+  color: red;
+  margin: 8px 0;
+}
+
 
 .loginForm label {
   font-weight: bold;
   display: block;
   margin: 5px 0;
 }
+
+/* .loginForm input {
+  width: 100%;
+} */
 
 /* Login Button */
 
@@ -432,12 +552,21 @@ nav ul li a:hover {
   }
 }
 
+.emptyProcesses {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 250px;
+}
+
 .processesBanner {
   padding-left: 0;
 }
 
 .processesContainer {
   margin-bottom: 100px;
+  min-height: 250px;
+  position: relative;
 }
 
 #addProcess {
@@ -665,7 +794,9 @@ nav ul li a:hover {
   background-color: hsl(51.4, 14.1%, 80.8%);
   font-size: 16px;
   resize: vertical;
-  box-sizing: border-box;
+  box-sizing: unset;
+  font-family: sans-serif;
+  line-height: 1.5rem;
 }
 
 .replayPage textarea:focus {
@@ -673,6 +804,8 @@ nav ul li a:hover {
   font-size: 16px;
   outline: none;
   border: 2px solid hsl(67.1, 34.4%, 28.4%);
+  padding: 2px;
+  box-sizing: border-box;
 }
 
 .replayDate {

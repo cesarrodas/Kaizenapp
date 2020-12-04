@@ -13,11 +13,15 @@ class Register extends React.Component {
     this.state = {
       username: '',
       email: '',
-      password: ''
+      password: '',
+      usernameError: '',
+      emailError: '',
+      passwordError: ''
     }
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.errorHandler = this.errorHandler.bind(this);
   }
 
   componentDidMount(){
@@ -28,6 +32,40 @@ class Register extends React.Component {
 
   handleSubmit(event){
     event.preventDefault();
+
+    let errors = false;
+
+    if(!this.state.username){
+      errors = true;
+      this.setState({
+        usernameError: 'Please choose a username'
+      });
+    }
+
+    if(!this.state.email){
+      errors = true;
+      this.setState({
+        emailError: 'Please enter an email'
+      });
+    }
+
+    if (this.state.email && /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(this.state.email) == false){
+      errors = true;
+      this.setState({
+        emailError: 'Please enter a valid email'
+      });
+    }
+
+    if(!this.state.password){
+      errors = true;
+      this.setState({
+        passwordError: 'Please choose a password'
+      });
+    }
+
+    if(errors) {
+      return;
+    }
     
     let input = {
       username: DOMPurify.sanitize(this.state.username),
@@ -39,26 +77,64 @@ class Register extends React.Component {
   }
 
   handleChange(event){
+
     this.setState({
-      [event.target.name] : event.target.value
+      [event.target.name] : event.target.value,
+      [event.target.name + 'Error'] : ''
     });
   }
 
+  errorHandler(){
+    let error = null;
+    if(this.props.registration.error){
+      if(this.props.registration.error.hasOwnProperty("message")){
+        error = <p className="errorLabel">{this.props.registration.error.message}</p>
+      }
+      if(this.props.registration.error.hasOwnProperty("error") && 
+        this.props.registration.error.error.hasOwnProperty("message")){
+        error = <p className="errorLabel">{this.props.registration.error.error.message}</p>
+      }
+    }
+    return error;
+  };
+
   render() {
+
+    let registrationError = this.errorHandler();
+
+    let usernameError = this.state.usernameError ? 
+      <p className="errorLabel">{this.state.usernameError}</p> : null;
+
+    let emailError = this.state.emailError ? 
+      <p className="errorLabel">{this.state.emailError}</p> : null;
+
+    let passwordError = this.state.passwordError ? 
+      <p className="errorLabel">{this.state.passwordError}</p> : null;
+
     return (
-      <div className="registerForm">
+      <div className="registerFormContainer">
         <h2>Register</h2>
-        <form onSubmit={this.handleSubmit}>
-          <label>Username</label><br/>
+        <form className="registerForm" onSubmit={this.handleSubmit}>
+          { registrationError }
+          <label>Username</label>
+            { usernameError }
             <input type="text" name="username" onChange={this.handleChange}/><br/>
-          <label>Email</label><br/>
+          <label>Email</label>
+            { emailError }
             <input type="email" name="email" onChange={this.handleChange}/><br/>
-          <label>Password</label><br/>
-            <input type="password" name="password" onChange={this.handleChange}/><br/>
-          <input type="submit" value="Submit" />
+          <label>Password</label>
+            { passwordError }
+            <input type="password" name="password" onChange={this.handleChange}/><br/><br/>
+          <input className="confirmRegisterButton" type="submit" value="Submit" />
         </form>
       </div>
     );
+  }
+}
+
+const mapStateToProps = (state) => {
+  return {
+    registration: state.registration
   }
 }
 
@@ -66,5 +142,5 @@ const mapDispatchToProps = { requestRegisterUser }
 
 export default compose(
   withRouter,
-  connect(null, mapDispatchToProps)
+  connect(mapStateToProps, mapDispatchToProps)
 )(Register);

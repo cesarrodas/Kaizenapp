@@ -15,6 +15,7 @@ export const userRoutes = (app) => {
     if(!id || !res.locals.user._id){
       res.status(404);
       res.responseFinalizer(req, res, { ok: false, message: "missing user"});
+      return;
     }
 
     const response = await sureThing(User.findOne({ _id: id }).select('categories _id username email createdAt updatedAt').exec(), {
@@ -25,9 +26,11 @@ export const userRoutes = (app) => {
     if(!response.ok){
       res.status(404);
       responseFinalizer(req, res, response);
+      return;
     } else {
       res.status(200);
       responseFinalizer(req, res, response);
+      return;
     }
   });
 
@@ -37,11 +40,13 @@ export const userRoutes = (app) => {
     if(!username || !res.locals.user.username){
       res.status(404);
       res.responseFinalizer(req, res, { ok: false, message: "missing user"});
+      return;
     }
 
     if(username !== res.locals.user.username){
       res.status(403);
       res.responseFinalizer(res, res, { ok: false, message: "Forbidden"});
+      return;
     }
 
     const response = await sureThing(User.findOne({ username: username }).select('categories _id username email createdAt updatedAt').exec(), {
@@ -52,9 +57,11 @@ export const userRoutes = (app) => {
     if(!response.ok){
       res.status(404);
       responseFinalizer(req, res, response);
+      return;
     } else {
       res.status(200);
       responseFinalizer(req, res, response);
+      return;
     }
   });
 
@@ -66,10 +73,10 @@ export const userRoutes = (app) => {
     if (!newPass.ok) {
       res.status(500);
       responseFinalizer(req, res, newPass);
+      return;
     }
 
-    const user = new User({ username: username, email: email, hash: newPass.result});
-
+    
     const uniqueUsername = await sureThing(checkExistance(username), {
       success: "success",
       rejected: "This username is already in use."
@@ -78,19 +85,23 @@ export const userRoutes = (app) => {
     if (!uniqueUsername.ok){
       res.status(400);
       responseFinalizer(req, res, uniqueUsername);
+      return;
     }
+
+    const user = new User({ username: username, email: email, hash: newPass.result});
 
     const response = await sureThing(user.save());
 
-    const userData = filterObject(["hash", "loginKeys", "__v"], response.result._doc);
-
     if(!response.ok){
-      res.status(500);
+      res.status(400);
       responseFinalizer(req, res, response);
+      return;
     }
 
+    const userData = filterObject(["hash", "loginKeys", "__v"], response.result._doc);
     res.status(201);
     responseFinalizer(req, res, { ok: true, message: "User created.", user: userData });
+    return;
 
   });
 
@@ -101,11 +112,13 @@ export const userRoutes = (app) => {
     if(!id || !res.locals.user._id){
       res.status(404);
       res.responseFinalizer(req, res, { ok: false, message: "missing user"});
+      return;
     }
 
     if(id !== res.locals.user._id){
       res.status(403);
       res.responseFinalizer(res, res, { ok: false, message: "Forbidden"});
+      return;
     }
 
     if(req.body.password){
@@ -124,10 +137,12 @@ export const userRoutes = (app) => {
     if(!updated.ok){
       res.status(400);
       responseFinalizer(req, res, updated)
+      return;
     }
 
     res.status(202);
     responseFinalizer(req, res, updated);
+    return;
   });
 
   app.delete('/api/users/:id', authentication, async (req, res) => {
@@ -137,11 +152,13 @@ export const userRoutes = (app) => {
     if(!id || !res.locals.user._id){
       res.status(404);
       res.responseFinalizer(req, res, { ok: false, message: "missing user"});
+      return;
     }
 
     if(id !== res.locals.user._id){
       res.status(403);
       res.responseFinalizer(res, res, { ok: false, message: "Forbidden"});
+      return;
     }
 
     const deleted = await sureThing(User.findOneAndDelete({ _id: id }), {
@@ -155,7 +172,7 @@ export const userRoutes = (app) => {
 
     res.status(200);
     responseFinalizer(req, res, deleted);
-
+    return;
   });
 }
 

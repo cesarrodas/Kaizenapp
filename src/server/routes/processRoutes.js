@@ -11,6 +11,7 @@ export const processRoutes = (app) => {
     if(!id || !res.locals.user._id){
       res.status(404);
       res.responseFinalizer(req, res, { ok: false, message: "missing user"});
+      return;
     }
 
     const processes = await sureThing(Process.find({ creator: res.locals.user._id }).exec(), {
@@ -21,10 +22,12 @@ export const processRoutes = (app) => {
     if(!processes.ok) {
       res.status(404)
       responseFinalizer(req, res, processes);
+      return;
     }
 
     res.status(200);
     responseFinalizer(req, res, processes);
+    return;
 
   });
 
@@ -34,6 +37,7 @@ export const processRoutes = (app) => {
     if(!id || !res.locals.user){
       res.status(404);
       responseFinalizer(req, res, { ok: false, message: "missing user"});
+      return;
     }
 
     const foundProcess = await sureThing(Process.findOne({ _id: id, creator: res.locals.user._id }).exec(), {
@@ -44,15 +48,18 @@ export const processRoutes = (app) => {
     if(res.locals.user._id !== foundProcess.result.creator){
       res.status(403);
       responseFinalizer(req, res, { ok: false, message: "Forbidden"});
+      return;
     }
 
     if(!foundProcess.ok){
       res.status(404);
       responseFinalizer(req, res, foundProcess);
+      return;
     }
 
     res.status(200);
     responseFinalizer(req, res, foundProcess);
+    return;
 
   });
 
@@ -62,6 +69,7 @@ export const processRoutes = (app) => {
     if(res.locals.user._id !== creator){
       res.status(403);
       responseFinalizer(req, res, { ok: false, message: "Forbidden"});
+      return;
     }
 
     const newProcess = new Process({ process: process, creator: creator, category: category, tags: tags });
@@ -74,10 +82,12 @@ export const processRoutes = (app) => {
     if(!saveProcess.ok){
       res.status(500);
       responseFinalizer(req, res, saveProcess);
+      return;
     }
 
     res.status(200);
     responseFinalizer(req, res, saveProcess);
+    return;
 
   });
 
@@ -100,6 +110,7 @@ export const processRoutes = (app) => {
     if(!res.locals.user._id){
       res.status(404);
       responseFinalizer(req, res, { ok: false, message: "Forbidden"});
+      return;
     }
 
     const updatedProcess = await sureThing(Process.findOneAndUpdate({ _id: id, creator: res.locals.user._id }, newProcess), {
@@ -110,10 +121,12 @@ export const processRoutes = (app) => {
     if(!updatedProcess.ok){
       res.status(400);
       responseFinalizer(req, res, updatedProcess);
+      return;
     }
 
     res.status(202);
     responseFinalizer(req, res, updatedProcess);
+    return;
 
   });
 
@@ -123,6 +136,7 @@ export const processRoutes = (app) => {
     if(!res.locals.user._id){
       res.status(404);
       responseFinalizer(req, res, { ok: false, message: "Forbidden"});
+      return; 
     }
 
     const deleted = await sureThing(Process.findOneAndDelete({ _id: id, creator: res.locals.user._id }), {
@@ -136,7 +150,7 @@ export const processRoutes = (app) => {
 
     res.status(200);
     responseFinalizer(req, res, deleted);
-
+    return;
   });
 
 }

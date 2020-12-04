@@ -22,10 +22,5 @@ export const filterObject = (keysToRemove, object) => {
 }
 
 export const responseFinalizer = (req, res, data) => {
-  if(req.token){
-    data.token = req.token;
-    res.send(data);
-  } else {
-    res.send(data);
-  }
+  res.send(data);
 }

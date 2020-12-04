@@ -122,20 +122,22 @@ export const authenticated = ( userData ) => ({
   payload: userData
 });
 
-export const notAuthenticated = () => ({
-  type: NOT_AUTHENTICATED
+export const notAuthenticated = ( payload ) => ({
+  type: NOT_AUTHENTICATED,
+  payload: payload
 });
 
-export const processRegisterUser = () => ({
+export const processingRegisterUser = () => ({
   type: PROCESSING_REGISTER_USER
 });
 
-export const registered = () => ({
+export const registrationComplete = () => ({
   type: REGISTRATION_COMPLETE
 });
 
-export const registrationFailed = () => ({
-  type: REGISTRATION_FAILED
+export const registrationFailed = (payload) => ({
+  type: REGISTRATION_FAILED,
+  payload: payload
 });
 
 export const getUserData = () => ({

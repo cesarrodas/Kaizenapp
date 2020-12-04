@@ -3,7 +3,8 @@ import * as actions from '../actions/actions';
 const defaultState = {
   loggedIn: false,
   userData: null,
-  loading: false
+  loading: false,
+  error: null
 }
 
 const authenticationReducer = (state = defaultState, action) => {
@@ -12,19 +13,22 @@ const authenticationReducer = (state = defaultState, action) => {
       return {
         loggedIn: false,
         userData: null,
-        loading: true
+        loading: true,
+        error: null
       }
     case actions.AUTHENTICATED:
       return {
         loggedIn: true,
         userData: action.payload.user,
-        loading: false
+        loading: false,
+        error: null
       }
     case actions.NOT_AUTHENTICATED:
       return {
         loggedIn: false,
         userData: null,
-        loading: false
+        loading: false,
+        error: action.payload
       };
     case actions.REQUEST_USER_LOGOUT:
       return Object.assign({} , state, {
@@ -34,7 +38,8 @@ const authenticationReducer = (state = defaultState, action) => {
       return {
         loggedIn: false,
         userData: null,
-        loading: false
+        loading: false,
+        error: null
       }
     case actions.USER_LOGOUT_FAILED:
       return Object.assign({} , state, {

@@ -9,7 +9,7 @@ class Dashboard extends React.Component {
 
   render() {
     let processes = null;
-    if(this.props.data.processes){
+    if(this.props.data.processes && this.props.data.processes.length){
       processes = this.props.data.processes.map((item) => {
         return (
           <Process 
@@ -17,6 +17,8 @@ class Dashboard extends React.Component {
             data={item}
           />);
       });
+    } else {
+      processes = (<div className="emptyProcesses"><h2>There are no processes to display</h2></div>)
     }
 
     let modal = null;

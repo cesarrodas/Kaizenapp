@@ -3,6 +3,7 @@ import createSagaMiddleware from 'redux-saga';
 import { createLogger } from 'redux-logger';
 // applyMiddleware from redux
 import authenticationReducer from './reducers/authentication';
+import registrationReducer from './reducers/registration';
 import processFormReducer from './reducers/processForm';
 import processesReducer from './reducers/processes';
 import processModalReducer from './reducers/processModal';
@@ -18,6 +19,7 @@ const sagaMiddleware = createSagaMiddleware();
 
 const store = createStore(combineReducers({
   auth: authenticationReducer,
+  registration: registrationReducer,
   processForm: processFormReducer,
   processModal: processModalReducer,
   replays: replaysReducer,

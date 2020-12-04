@@ -1,17 +1,10 @@
-const path = require("path");
 const fs = require('fs');
+const { merge } = require('webpack-merge');
+const common = require('./webpack.common.js');
 
-module.exports = {
-  mode: "development",
-  entry: path.resolve(__dirname, `src`, `app`),
-  output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js',
-    publicPath: '/'
-  },
-  resolve: {
-    extensions: ['.js', '.jsx']
-  },
+module.exports = merge(common, {
+  mode: 'development',
+  devtool: 'inline-source-map',
   devServer: {
     http2: true,
     https: {
@@ -26,10 +19,4 @@ module.exports = {
       "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
     }
   },
-  module: {
-    rules: [{
-      test: /\.jsx?/,
-      loader: 'babel-loader'
-    }]
-  }
-}
+});
