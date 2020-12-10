@@ -17,6 +17,13 @@ import * as sagas from './sagas';
 
 const sagaMiddleware = createSagaMiddleware();
 
+let middleware = [];
+if (process.env.NODE_ENV === 'development') {
+  middleware = [sagaMiddleware];
+} else {
+  middleware = [createLogger(), sagaMiddleware];
+}
+
 const store = createStore(combineReducers({
   auth: authenticationReducer,
   registration: registrationReducer,
@@ -25,7 +32,7 @@ const store = createStore(combineReducers({
   replays: replaysReducer,
   data: processesReducer,
   replayPage: replayPage
-}), applyMiddleware(createLogger() ,sagaMiddleware));
+}), applyMiddleware(...middleware));
 
 for(let saga in sagas){
   sagaMiddleware.run(sagas[saga]);

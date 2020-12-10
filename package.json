@@ -5,9 +5,11 @@
   "main": "index.js",
   "scripts": {
     "dev-frontend": "webpack-dev-server --open --config webpack.dev.js",
-    "server": "babel-node src/server/index.js",
+    "server-two": "babel-node src/server/index.js",
+    "server": "webpack --config webpack.server.common.js && node ./dist/server/bundle.js",
     "start": "concurrently \"npm run dev-frontend\" \"npm run server\" ",
-    "build": "webpack --config webpack.prod.js"
+    "build": "webpack -p --config webpack.prod.js",
+    "build-server": "webpack -p --config webpack.server.common.js"
   },
   "keywords": [],
   "author": "",
@@ -40,11 +42,13 @@
     "@babel/preset-react": "^7.10.1",
     "babel-loader": "^8.1.0",
     "concurrently": "^5.2.0",
+    "copy-webpack-plugin": "^6.4.0",
     "dotenv": "^8.2.0",
     "nodemon": "^2.0.4",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0",
-    "webpack-merge": "^5.4.0"
+    "webpack-merge": "^5.4.0",
+    "webpack-node-externals": "^2.5.2"
   }
 }

@@ -24,7 +24,7 @@ class Home extends React.Component {
   }
 
   render() {
-    return (
+    const homeDisplay = (
       <div className="span12 home">
         <div className="home-content">
           <div className="header">Kaizen</div>
@@ -36,6 +36,16 @@ class Home extends React.Component {
         </div>
       </div>
     );
+
+    const loadDisplay = (
+      <div className="loadDisplayContainer">
+        <div className="loadDisplay">
+          <div className="loadCircle"></div>
+        </div>
+      </div>
+    );
+    
+    return this.props.auth.loading == true ? loadDisplay : homeDisplay; 
   }
 }
 

@@ -31,7 +31,6 @@ app.use(cookieParser(process.env.COOKIE_SIGNER));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-//require('./routes/userRoutes')(app);
 userRoutes(app);
 processRoutes(app);
 replayRoutes(app);
@@ -39,28 +38,16 @@ authRoutes(app);
 
 connectDB();
 
-let items = [
-  {
-    id: 1,
-    name: "One"
-  },
-  {
-    id: 2,
-    name: "Two"
-  }
-];
-
-app.get('/', (req, res) => {
-  //res.send(JSON.stringify(items));
-  res.send(items);
-  //res.render('index', { items });
-});
-
-const port = 3000;
-
-//app.listen(port, () => console.log("Server running..."));
-https.createServer({
-  key: fs.readFileSync('server.key'),
-  cert: fs.readFileSync('server.crt')
-}, app)
-.listen(port, () => console.log(`Server running on port ${port}!`));
+if(process.env.NODE_ENV == "production"){
+  const port = 7001;
+  app.listen(port, () => {
+    console.log(`Production server listening on port ${port}`);
+  });
+} else {
+  const port = 3000;
+  https.createServer({
+    key: fs.readFileSync('server.key'),
+    cert: fs.readFileSync('server.crt')
+  }, app)
+  .listen(port, () => console.log(`Server running on port ${port}!`));
+}

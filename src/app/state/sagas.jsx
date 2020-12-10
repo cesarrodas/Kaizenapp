@@ -1,8 +1,5 @@
 import { put, take } from 'redux-saga/effects';
 
-// function HomeButton() {
-//   let history = useHistory();
-
 import * as actions from './actions/actions';
 import axios from 'axios';
 
@@ -46,10 +43,14 @@ export function* userAuthenticationSaga(){
 export function* getUserData(){
   while ( true ) {
     yield take(actions.GET_USER_DATA);
+    yield put(actions.authenticating());
     try {
       const { data } = yield axios.get(url + '/api/getUserData', { withCredentials: true });
+      console.log("USER DATA", data);
       if(data.ok){
         yield put(actions.authenticated(data.result));
+      } else {
+        yield put(actions.notAuthenticated());
       }
     } catch (err) {
       yield put(actions.notAuthenticated(err.response.data));
