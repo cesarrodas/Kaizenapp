@@ -5,7 +5,6 @@ const https = require('https');
 
 const express = require('express');
 const cookieParser = require('cookie-parser');
-// const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 import { connectDB } from './connect-db';
 import mongoose from 'mongoose';
@@ -21,9 +20,18 @@ mongoose.set('useCreateIndex', true);
 
 const app = express();
 
-var corsOptions = {
-  origin: 'https://localhost:8080',
-  credentials: true
+let corsOptions;
+
+if(process.env.NODE_ENV == "production"){
+  corsOptions = {
+    origin: process.env.SERVER_CORS_ORIGIN_PROD,
+    credentials: true
+  }
+} else if (process.env.NODE_ENV == "development"){
+  corsOptions = {
+    origin: process.env.SERVER_CORS_ORIGIN_DEV,
+    credentials: true
+  }
 }
 
 app.use(cors(corsOptions));
@@ -39,12 +47,12 @@ authRoutes(app);
 connectDB();
 
 if(process.env.NODE_ENV == "production"){
-  const port = 7001;
+  const port = Number(process.env.SERVER_PRODUCTION_PORT);
   app.listen(port, () => {
     console.log(`Production server listening on port ${port}`);
   });
 } else {
-  const port = 3000;
+  const port = Number(process.env.SERVER_DEVELOPMENT_PORT);
   https.createServer({
     key: fs.readFileSync('server.key'),
     cert: fs.readFileSync('server.crt')

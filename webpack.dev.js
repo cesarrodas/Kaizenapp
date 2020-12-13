@@ -1,11 +1,19 @@
 const fs = require('fs');
+const path = require('path');
+const webpack = require('webpack');
 const { merge } = require('webpack-merge');
 const common = require('./webpack.common.js');
 
 module.exports = merge(common, {
   mode: 'development',
   devtool: 'inline-source-map',
+  output: {
+    path: path.resolve(__dirname, 'dev/public'),
+    filename: 'bundle.js',
+    publicPath: '/'
+  },
   devServer: {
+    contentBase: path.join(__dirname, 'dev'),
     http2: true,
     https: {
       key: fs.readFileSync('./server.key'),
@@ -19,4 +27,9 @@ module.exports = merge(common, {
       "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
     }
   },
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify('development')
+    })
+  ]
 });

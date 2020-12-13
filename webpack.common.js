@@ -4,11 +4,6 @@ const CopyPlugin = require("copy-webpack-plugin");
 module.exports = {
   mode: "development",
   entry: path.resolve(__dirname, `src`, `app`),
-  output: {
-    path: path.resolve(__dirname, 'dist/public'),
-    filename: 'bundle.js',
-    publicPath: '/'
-  },
   plugins: [
     new CopyPlugin({
       patterns: [
@@ -23,6 +18,22 @@ module.exports = {
         },
         {
           from: 'index.html',
+          to: '.'
+        },
+        {
+          from: 'styles.css',
+          to: '.'
+        },
+        {
+          from: 'rootSSL.pem',
+          to: '.'
+        },
+        {
+          from: 'server.crt',
+          to: '.'
+        },
+        {
+          from: 'server.key',
           to: '.'
         }
       ]

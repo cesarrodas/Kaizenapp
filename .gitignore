@@ -4,3 +4,4 @@ rootSSL.pem
 server.crt
 server.key
 dist
+dev

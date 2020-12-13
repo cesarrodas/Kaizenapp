@@ -135,7 +135,7 @@ nav ul li a:hover {
 
 .home {
   background-color: black;
-  background-image: url("./dist/public/assets/bg3.jpg");
+  background-image: url("./assets/bg3.jpg");
   background-size: cover;
   position: relative;
 }

@@ -6,10 +6,12 @@
   "scripts": {
     "dev-frontend": "webpack-dev-server --open --config webpack.dev.js",
     "server-two": "babel-node src/server/index.js",
-    "server": "webpack --config webpack.server.common.js && node ./dist/server/bundle.js",
+    "server": "npm run build-dev-server && node ./dev/server/bundle.js",
+    "front_prod": "pm2 start ecosystem.config.js --env production",
     "start": "concurrently \"npm run dev-frontend\" \"npm run server\" ",
     "build": "webpack -p --config webpack.prod.js",
-    "build-server": "webpack -p --config webpack.server.common.js"
+    "build-dev-server": "webpack --config webpack.server.dev.js",
+    "build-server": "webpack -p --config webpack.server.prod.js"
   },
   "keywords": [],
   "author": "",
