@@ -3,6 +3,7 @@ const path = require('path');
 const webpack = require('webpack');
 const { merge } = require('webpack-merge');
 const common = require('./webpack.common.js');
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = merge(common, {
   mode: 'development',
@@ -12,6 +13,41 @@ module.exports = merge(common, {
     filename: 'bundle.js',
     publicPath: '/'
   },
+  plugins: [
+    new CopyPlugin({
+      patterns: [
+        {
+          from: 'src/app/assets/*',
+          to: './assets/',
+          flatten: true
+        },
+        {
+          from: 'src/index.js',
+          to: '../'
+        },
+        {
+          from: 'index.html',
+          to: '.'
+        },
+        {
+          from: 'styles.css',
+          to: '.'
+        },
+        {
+          from: 'rootSSL.pem',
+          to: '.'
+        },
+        {
+          from: 'server.crt',
+          to: '.'
+        },
+        {
+          from: 'server.key',
+          to: '.'
+        }
+      ]
+    })
+  ],
   devServer: {
     contentBase: path.join(__dirname, 'dev'),
     http2: true,
