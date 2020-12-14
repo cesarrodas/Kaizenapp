@@ -18,13 +18,13 @@ module.exports = merge(common, {
     new CopyPlugin({
       patterns: [
         { 
-          from: path.resolve(__dirname, 'src/app/assets/*'),
+          from: './src/app/assets/*',
           to: './assets/',
           flatten: true,
           force: true
         },
         {
-          from: path.resolve(__dirname, 'src', 'index.js'),
+          from: './src/index.js',
           to: '../',
           force: true
         },
