@@ -3,7 +3,7 @@ module.exports = {
       {
         name: "kaizen_frontend",
         script: "./dist/index.js",
-        watch: true,
+        watch: false,
         env: {
             "NODE_ENV": "development"
         },

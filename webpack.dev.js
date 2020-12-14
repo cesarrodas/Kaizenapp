@@ -13,41 +13,6 @@ module.exports = merge(common, {
     filename: 'bundle.js',
     publicPath: '/'
   },
-  plugins: [
-    new CopyPlugin({
-      patterns: [
-        {
-          from: 'src/app/assets/*',
-          to: './assets/',
-          flatten: true
-        },
-        {
-          from: 'src/index.js',
-          to: '../'
-        },
-        {
-          from: 'index.html',
-          to: '.'
-        },
-        {
-          from: 'styles.css',
-          to: '.'
-        },
-        {
-          from: 'rootSSL.pem',
-          to: '.'
-        },
-        {
-          from: 'server.crt',
-          to: '.'
-        },
-        {
-          from: 'server.key',
-          to: '.'
-        }
-      ]
-    })
-  ],
   devServer: {
     contentBase: path.join(__dirname, 'dev'),
     http2: true,
@@ -66,6 +31,46 @@ module.exports = merge(common, {
   plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('development')
+    }),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, 'src/app/assets/*'),
+          to: './assets/',
+          flatten: true,
+          force: true
+        },
+        {
+          from: 'src/index.js',
+          to: '../',
+          force: true
+        },
+        {
+          from: 'index.html',
+          to: '.',
+          force: true
+        },
+        {
+          from: 'styles.css',
+          to: '.',
+          force: true
+        },
+        {
+          from: 'rootSSL.pem',
+          to: '.',
+          force: true
+        },
+        {
+          from: 'server.crt',
+          to: '.',
+          force: true
+        },
+        {
+          from: 'server.key',
+          to: '.',
+          force: true
+        }
+      ]
     })
   ]
 });

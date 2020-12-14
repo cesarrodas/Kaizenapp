@@ -12,31 +12,33 @@ module.exports = merge(common, {
     publicPath: '/'
   },
   plugins: [
-    new CopyPlugin({
-      patterns: [
-        {
-          from: 'src/app/assets/*',
-          to: './assets/',
-          flatten: true
-        },
-        {
-          from: 'src/index.js',
-          to: '../'
-        },
-        {
-          from: 'index.html',
-          to: '.'
-        },
-        {
-          from: 'styles.css',
-          to: '.'
-        }
-      ]
-    })
-  ],
-  plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production')
+    }),
+    new CopyPlugin({
+      patterns: [
+        { 
+          from: path.resolve(__dirname, 'src/app/assets/*'),
+          to: './assets/',
+          flatten: true,
+          force: true
+        },
+        {
+          from: path.resolve(__dirname, 'src', 'index.js'),
+          to: '../',
+          force: true
+        },
+        {
+          from: './index.html',
+          to: '.',
+          force: true
+        },
+        {
+          from: './styles.css',
+          to: '.',
+          force: true
+        }
+      ]
     })
   ]
 });
