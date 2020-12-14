@@ -1,13 +1,20 @@
 const express = require('express');
-const env = require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
 const app = new express();
 let port;
 
+console.log("environment variables", JSON.stringify(process.env));
+
+console.log("IS THERE PROCESSE ENV", process.env.NODE_ENV);
 if(process.env.NODE_ENV == "development"){
-  port = Number(env.parsed.FRONT_DEVELOPMENT_PORT);
+  console.log("dev");
+  port = Number(process.env.FRONT_DEVELOPMENT_PORT);
 } else if (process.env.NODE_ENV == "production") {
-  port = Number(env.parsed.FRONT_PRODUCTION_PORT);
+  console.log("prod");
+  console.log(process.env.FRONT_PRODUCTION_PORT);
+  port = Number(process.env.FRONT_PRODUCTION_PORT);
 }
 
 app.use(express.static('./public'));
