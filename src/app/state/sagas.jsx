@@ -3,8 +3,10 @@ import { put, take } from 'redux-saga/effects';
 import * as actions from './actions/actions';
 import axios from 'axios';
 
-console.log("can we log the variables from here ?", process.env.NODE_ENV);
-const url = "https://localhost:3000";
+let url = process.env.FRONT_END_SAGAS_DEV;
+if(process.env.NODE_ENV == "production"){
+  url = process.env.FRONT_END_SAGAS_PROD
+}
 
 export function* userRegistrationSaga(){
   while(true){
