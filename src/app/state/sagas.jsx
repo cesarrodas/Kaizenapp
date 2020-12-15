@@ -3,6 +3,7 @@ import { put, take } from 'redux-saga/effects';
 import * as actions from './actions/actions';
 import axios from 'axios';
 
+console.log("can we log the variables from here ?", process.env.NODE_ENV);
 const url = "https://localhost:3000";
 
 export function* userRegistrationSaga(){
