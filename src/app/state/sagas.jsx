@@ -17,7 +17,7 @@ export function* userRegistrationSaga(){
     yield put(actions.processingRegisterUser());
 
     try {
-      const { data } = yield axios.post(url + '/api/users/create', { username, password, email });
+      const { data } = yield axios.post(`${url}/api/users/create`, { username, password, email });
       if(data.ok){
         yield put(actions.registrationComplete());
         yield put(actions.requestAuthenticateUser(username, password));
@@ -33,7 +33,7 @@ export function* userAuthenticationSaga(){
     const { username, password } = yield take(actions.REQUEST_AUTHENTICATE_USER);
     yield put(actions.authenticating());
     try {
-      const { data } = yield axios.post(url + '/api/authenticate', {username, password}, { withCredentials: true });
+      const { data } = yield axios.post(`${url}/api/authenticate`, {username, password}, { withCredentials: true });
 
       if(data.ok){
         yield put(actions.authenticated(data.user));
@@ -50,7 +50,7 @@ export function* getUserData(){
     yield take(actions.GET_USER_DATA);
     yield put(actions.authenticating());
     try {
-      const { data } = yield axios.get(url + '/api/getUserData', { withCredentials: true });
+      const { data } = yield axios.get(`${url}/api/getUserData`, { withCredentials: true });
       console.log("USER DATA", data);
       if(data.ok){
         yield put(actions.authenticated(data.result));
@@ -69,7 +69,7 @@ export function* logOut(){
     yield take(actions.REQUEST_USER_LOGOUT);
 
     try {
-      const { data } = yield axios.get(url + '/api/logout', { withCredentials: true });
+      const { data } = yield axios.get(`${url}/api/logout`, { withCredentials: true });
   
       if(data.ok){
         yield put(actions.userLogoutComplete());
@@ -85,7 +85,7 @@ export function* createProcess(){
     const processData = yield take(actions.REQUEST_PROCESS_CREATION);
 
     try {
-      const { data } = yield axios.post(url + '/api/processes/create', processData.payload, { withCredentials: true });
+      const { data } = yield axios.post(`${url}/api/processes/create`, processData.payload, { withCredentials: true });
       if(data.ok){
         yield put(actions.requestReplayCreate({
           analysis: "",
@@ -115,7 +115,7 @@ export function* updateProcess(){
     updateData.tags = processData.payload.tags;
 
     try {
-      const { data } = yield axios.put(url + `/api/processes/${processData.payload._id}`, updateData, { withCredentials: true })
+      const { data } = yield axios.put(`${url}/api/processes/${processData.payload._id}`, updateData, { withCredentials: true })
       if(data.ok){
         yield put(actions.closeProcessModal(true));
         yield put(actions.getUserData());
@@ -132,7 +132,7 @@ export function* deleteProcess(){
   while(true){
     const request = yield take(actions.REQUEST_PROCESS_DELETE);
 
-    const deleteUrl = url + `/api/processes/${request.payload}`;
+    const deleteUrl = `${url}/api/processes/${request.payload}`;
     try {
       const { data } = yield axios.delete(deleteUrl, { withCredentials: true });
 
@@ -153,7 +153,7 @@ export function* createReplay(){
   while(true){
     const request = yield take(actions.REQUEST_REPLAY_CREATE);
 
-    const createUrl = url + `/api/replay/create`;
+    const createUrl = `${url}/api/replay/create`;
 
     try {
       const { data } = yield axios.post(createUrl, request.payload, { withCredentials: true });
@@ -174,7 +174,7 @@ export function* updateReplay(){
     const request = yield take(actions.REQUEST_REPLAY_UPDATE);
     const replayId = request.payload._id;
 
-    const updateUrl = url + `/api/replay/${replayId}`;
+    const updateUrl = `${url}/api/replay/${replayId}`;
 
     try {
       const { data } = yield axios.put(updateUrl, request.payload, { withCredentials: true });
@@ -194,7 +194,7 @@ export function* deleteReplay(){
 
     console.log("replay id: ", replayId);
 
-    const deleteUrl = url + `/api/replay/${replayId}`;
+    const deleteUrl = `${url}/api/replay/${replayId}`;
 
     try {
       const { data } = yield axios.delete(deleteUrl, { withCredentials: true });
@@ -214,7 +214,7 @@ export function* getReplays(){
     const request = yield take(actions.REQUEST_REPLAYS);
 
     try {
-      const { data } = yield axios.get( url + `/api/replays/process/${request.payload}`, { withCredentials: true });
+      const { data } = yield axios.get(`${url}/api/replays/process/${request.payload}`, { withCredentials: true });
       if(data.ok){
         yield put(actions.requestReplaysComplete(data.result));
         if(data.result.length > 0){
