@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
+require('dotenv').config({ path: path.join(__dirname, '../.env') });
 
 const app = new express();
 let port;
@@ -17,7 +17,7 @@ if(process.env.NODE_ENV == "development"){
   port = Number(process.env.FRONT_PRODUCTION_PORT);
 }
 
-app.use(express.static(__dirname, '/public'));
+app.use(express.static(path.join(__dirname, '/public')));
 
 app.listen(port, () => {
   console.log(`front end listening on port ${port}`);
