@@ -8,7 +8,7 @@ import store from './state/store';
 import Main from './components/Main';
 
 ReactDOM.render(
-  <BrowserRouter>
+  <BrowserRouter basename="/kaizen">
     <Provider store={store}>
       <Main  />
     </Provider>
