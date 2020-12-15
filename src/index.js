@@ -5,8 +5,6 @@ require('dotenv').config({ path: path.join(__dirname, '../.env') });
 const app = new express();
 let port;
 
-console.log("environment variables", JSON.stringify(process.env));
-
 console.log("IS THERE PROCESSE ENV", process.env.NODE_ENV);
 if(process.env.NODE_ENV == "development"){
   console.log("dev");
