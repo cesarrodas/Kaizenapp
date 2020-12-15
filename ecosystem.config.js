@@ -7,8 +7,8 @@ module.exports = {
         name: "kaizen_frontend",
         script: "./dist/index.js",
         watch: false,
-        env: env.parsed,
-        env_production: env.parsed
+        env: Object.assign({}, env.parsed, { NODE_ENV: "development" }),
+        env_production: Object.assign({}, env.parsed, { NODE_ENV: "production" })
       }
   ]
 }
