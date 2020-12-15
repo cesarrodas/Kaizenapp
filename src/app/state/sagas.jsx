@@ -5,8 +5,10 @@ import axios from 'axios';
 
 let url = process.env.FRONT_END_SAGAS_DEV;
 if(process.env.NODE_ENV == "production"){
-  url = process.env.FRONT_END_SAGAS_PROD
+  url = process.env.FRONT_END_SAGAS_PROD;
 }
+
+console.log("THIS B THE URL ", url);
 
 export function* userRegistrationSaga(){
   while(true){
