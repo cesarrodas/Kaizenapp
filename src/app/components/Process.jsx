@@ -57,8 +57,19 @@ class Process extends React.Component {
       <div className="processContainer">
         <p className="processTask" onClick={this.goToReplays} >{this.props.data.process}</p>
         <div className="processTags">
-          <span className="tagLabel">Tags: </span>
+          {/* <span className="tagLabel">Tags: </span> */}
+          <div className="cssLayer"></div>
+          <div class="borderLeft">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
           <div className="tagsContainer">{tags}</div>
+          <div class="borderRight">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
         </div>
         <div className="detailContainer">
           <span className="processCategoryLabel">{this.props.data.category}</span>

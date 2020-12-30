@@ -6,7 +6,8 @@
   "scripts": {
     "dev-frontend": "webpack-dev-server --open --config webpack.dev.js",
     "server": "npm run build-dev-server && node ./dev/server/bundle.js",
-    "start": "concurrently \"npm run dev-frontend\" \"npm run server\" ",
+    "dev-server": "npm run build-dev-server && nodemon ./dev/server/bundle.js",
+    "start": "concurrently \"npm run dev-frontend\" \"npm run dev-server\" ",
     "start_front_prod": "pm2 start  ecosystem.config.js --env production",
     "start_server_prod": "pm2 start ./dist/server/bundle.js -n kaizer_server",
     "build": "webpack -p --config webpack.prod.js",

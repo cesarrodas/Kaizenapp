@@ -7,8 +7,13 @@ import store from './state/store';
 
 import Main from './components/Main';
 
+let basename = "/kaizen";
+if(process.env.NODE_ENV == "development"){
+  basename = '';
+}
+
 ReactDOM.render(
-  <BrowserRouter basename="/kaizen">
+  <BrowserRouter basename={basename}>
     <Provider store={store}>
       <Main  />
     </Provider>
