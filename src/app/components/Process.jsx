@@ -15,9 +15,14 @@ import {
 class Process extends React.Component {
   constructor(){
     super();
+    this.state = {
+      dragging: false
+    }
     this.deleteProcess = this.deleteProcess.bind(this);
     this.updateProcess = this.updateProcess.bind(this);
     this.goToReplays = this.goToReplays.bind(this);
+    this.handleEvent = this.handleEvent.bind(this);
+    this.draggableRef = React.createRef();
   }
 
   componentDidMount(){
@@ -48,6 +53,21 @@ class Process extends React.Component {
     this.props.history.push('/replays');
   }
 
+  handleEvent (event) {
+    if (event.type === "mousedown") {
+      this.setState({ dragging: true });
+    } else if (event.type === "mouseup") {
+      this.setState({ dragging: false });
+    } else if (event.type === "mousemove"){
+      if(this.state.dragging == true){
+        console.log("ref", this.draggableRef);
+        this.draggableRef.current.scrollLeft = this.draggableRef.current.scrollLeft - event.movementX;
+      }
+    } else if (event.type === "mouseleave"){
+      this.setState({ dragging: false });
+    }
+  }
+
   render () {
     const tags = this.props.data.tags.map((tag, index) => {
       return <span className="processTag" key={index}>{tag}</span>
@@ -56,15 +76,14 @@ class Process extends React.Component {
     return (
       <div className="processContainer">
         <p className="processTask" onClick={this.goToReplays} >{this.props.data.process}</p>
-        <div className="processTags">
+        <div className="processTags"> 
           {/* <span className="tagLabel">Tags: </span> */}
-          <div className="cssLayer"></div>
           <div class="borderLeft">
             <span></span>
             <span></span>
             <span></span>
           </div>
-          <div className="tagsContainer">{tags}</div>
+          <div className="tagsContainer" ref={this.draggableRef} onMouseDown={this.handleEvent} onMouseMove={this.handleEvent} onMouseUp={this.handleEvent} onMouseLeave={this.handleEvent}>{tags}</div>
           <div class="borderRight">
             <span></span>
             <span></span>

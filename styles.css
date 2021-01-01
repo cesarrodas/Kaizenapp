@@ -340,7 +340,7 @@ nav ul li a:hover {
   position: fixed;
   left: 0;
   top: 0;
-  z-index: 2;
+  z-index: 10;
 }
 
 .modal-bg-appear {
@@ -373,7 +373,7 @@ nav ul li a:hover {
   background-color: hsl(51.4, 14.1%, 80.8%);
   /* width: 200px; */
   height: auto;
-  z-index: 2;
+  z-index: 10;
   position: fixed;
   box-sizing: border-box;
   width: 90%;
@@ -730,7 +730,6 @@ nav ul li a:hover {
   grid-column: span 6;
   max-height: 45px;
   /* Internet Explorer 10+ */
-  z-index: 3;
   overflow-x: hidden;
 }
 
@@ -774,9 +773,9 @@ nav ul li a:hover {
 .tagsContainer {
   display: flex;
   flex-wrap: nowrap;
-  width: 100%;
+  width: calc(100% - 1em);
   margin-left: 1em;
-  z-index: 1;
+  /* padding-right: 1em; */
   overflow-x: scroll;
   user-select: none;
   scrollbar-width: none; /* Firefox */
