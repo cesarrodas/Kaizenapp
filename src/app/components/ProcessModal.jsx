@@ -137,7 +137,7 @@ class ProcessModal extends React.Component {
           <select name="category" onChange={this.onChange} value={this.state.category || ''} className="processCategory">
             <option value="lifestyle">Lifestyle</option>
             <option value="work">Work</option>
-            <option value="self development">Self Development</option>
+            <option value="self development">Self Dev</option>
             <option value="fun">Fun</option>
           </select>
           <br/>
