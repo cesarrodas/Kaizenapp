@@ -9,11 +9,11 @@
     "dev-server": "npm run build-dev-server && nodemon ./dev/server/bundle.js",
     "start": "concurrently \"npm run dev-frontend\" \"npm run dev-server\" ",
     "start_front_prod": "pm2 start  ecosystem.config.js --env production",
-    "start_server_prod": "pm2 start ./dist/server/bundle.js -n kaizer_server",
+    "start_server_prod": "pm2 start ./dist/server/bundle.js -n kaizen_server",
     "build": "webpack -p --config webpack.prod.js",
     "build-dev-server": "webpack --config webpack.server.dev.js",
     "build-server": "webpack -p --config webpack.server.prod.js",
-    "super_deploy": "concurrently \"npm run start_front_prod\" \"npm run start_server_prod\" ",
+    "super_deploy": "npm run start_front_prod && npm run start_server_prod",
     "deploy": "npm run build-server && npm run build && npm run super_deploy"
   },
   "keywords": [],
