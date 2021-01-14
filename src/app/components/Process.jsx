@@ -78,13 +78,13 @@ class Process extends React.Component {
         <p className="processTask" onClick={this.goToReplays} >{this.props.data.process}</p>
         <div className="processTags"> 
           {/* <span className="tagLabel">Tags: </span> */}
-          <div class="borderLeft">
+          <div className="borderLeft">
             <span></span>
             <span></span>
             <span></span>
           </div>
           <div className="tagsContainer" ref={this.draggableRef} onMouseDown={this.handleEvent} onMouseMove={this.handleEvent} onMouseUp={this.handleEvent} onMouseLeave={this.handleEvent}>{tags}</div>
-          <div class="borderRight">
+          <div className="borderRight">
             <span></span>
             <span></span>
             <span></span>
