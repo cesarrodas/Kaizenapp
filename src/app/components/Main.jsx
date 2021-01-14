@@ -50,7 +50,6 @@ class Main extends React.Component {
       <main>
         <Navigation auth={this.props.auth} logout={this.props.requestUserLogout} />
         <Switch>
-          <Route path="/" exact component={() => <Home auth={this.props.auth} />} />
           <Route path="/login" component={() => <Login auth={this.props.auth} />} />
           <Route path="/register" component={() => <Register auth={this.props.auth} />} />
           <PrivateRoute path="/dashboard">
@@ -66,7 +65,8 @@ class Main extends React.Component {
               updateReplayPage={this.props.updateReplayPage}
             />
           </PrivateRoute>
-          <Route path="*" component={NotFound}></Route>
+          <Route path="/" component={() => <Home auth={this.props.auth} />} />
+          {/* <Route path="*" component={NotFound}></Route> */}
         </Switch>
       </main>
     )
