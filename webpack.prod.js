@@ -10,7 +10,7 @@ module.exports = merge(common, {
   output: {
     path: path.resolve(__dirname, 'dist/public'),
     filename: 'bundle.js',
-    publicPath: '/'
+    publicPath: '/kaizen'
   },
   plugins: [
     new webpack.DefinePlugin({

@@ -15,7 +15,8 @@ if(process.env.NODE_ENV == "development"){
   port = Number(process.env.FRONT_PRODUCTION_PORT);
 }
 
-app.use(express.static(path.join(__dirname, '/public')));
+console.log("dang address", path.join(__dirname, 'public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.listen(port, () => {
   console.log(`front end listening on port ${port}`);

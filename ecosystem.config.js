@@ -12,6 +12,7 @@ module.exports = {
       {
         name: "kaizen_frontend",
         script: "./dist/index.js",
+	interpreter_args: "-harmony",
         watch: false,
         env: Object.assign({}, env.parsed, { NODE_ENV: "development" }),
         env_production: Object.assign({}, env.parsed, { NODE_ENV: "production" })
